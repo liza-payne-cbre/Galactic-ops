@@ -1,0 +1,1163 @@
+{
+  "version": 1,
+  "view": "cmd",
+  "commander": {
+    "name": "Mummy"
+  },
+  "settings": {
+    "teamName": "Operations squadron",
+    "currency": "$",
+    "pointsPerUnit": 100
+  },
+  "operatives": [
+    {
+      "id": "u1",
+      "name": "Edward",
+      "callsign": "ALPHA-1",
+      "credits": 2950,
+      "directives": [],
+      "log": {},
+      "goal": {
+        "avatar": "droid",
+        "name": "Build a Droid",
+        "target": 13000
+      },
+      "celebrated": false,
+      "lastUnlocked": null
+    },
+    {
+      "id": "u2",
+      "name": "Yvette",
+      "callsign": "BRAVO-2",
+      "credits": 2250,
+      "directives": [],
+      "log": {},
+      "goal": {
+        "avatar": "axolotl",
+        "name": "Baby Yoda shoulder buddy",
+        "target": 3800
+      },
+      "celebrated": false,
+      "lastUnlocked": null
+    }
+  ],
+  "missions": [
+    {
+      "id": "mvel42oc40x2s",
+      "title": "Clean and tidy the pantry",
+      "details": "Take everything  out of the pantry level by level. Clean the floors. Clean. the shelves. Put everything back in tidy and organised.",
+      "category": "Cleaning",
+      "credits": 500,
+      "repeatable": false,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792373851020
+    },
+    {
+      "id": "mvel2o00uwcm6",
+      "title": "Clean inside the fridge",
+      "details": "Take everything out. Clean the shelves with cleaner spray. Throw away anything mouldy or out of date. Put items tidy back in the fridge.",
+      "category": "Cleaning",
+      "credits": 250,
+      "repeatable": false,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792373785345
+    },
+    {
+      "id": "mvekqgcb1sclw",
+      "title": "Vacuum the stairs",
+      "details": "Give the stairs a really good vacuum",
+      "category": "Cleaning",
+      "credits": 50,
+      "repeatable": false,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792373215547
+    },
+    {
+      "id": "mvek0rm0iu5zm",
+      "title": "Clean dining table",
+      "details": "Clear off table. Clean wooden top and placemats with spray or wipes",
+      "category": "Cleaning",
+      "credits": 100,
+      "repeatable": false,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792372017096
+    },
+    {
+      "id": "mvejzcf3eqpdg",
+      "title": "Dust lounge and clean tables",
+      "details": "Use cloth duster to dust all surfaces in the lounge putting awAy all toys and items as you go. Use wipes or spray to scrub each table clean.",
+      "category": "Cleaning",
+      "credits": 200,
+      "repeatable": false,
+      "status": "claimed",
+      "assignee": "u1",
+      "createdAt": 1792371950751,
+      "claimedAt": 1792540527328
+    },
+    {
+      "id": "mvejx43ofwfvo",
+      "title": "Dusting blinds",
+      "details": "Use the duster to clean the blinds in the whole house.",
+      "category": "Cleaning",
+      "credits": 200,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u2",
+      "createdAt": 1792371846660,
+      "claimedAt": 1792504766423,
+      "submittedAt": 1792540320067,
+      "approvedAt": 1792540340633
+    },
+    {
+      "id": "mvejvxcximp3w",
+      "title": "Kitchen clean",
+      "details": "Deep clean the kitchen. Clear each counter completely, spray cleaner and scrub off. Clean doors of cupboard. Clean front of dishwasher.",
+      "category": "Cleaning",
+      "credits": 500,
+      "repeatable": false,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792371791265
+    },
+    {
+      "id": "mvehw6brl3d5h",
+      "title": "Bins out",
+      "details": "",
+      "category": "Gardening",
+      "credits": 50,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1792368443655,
+      "claimedAt": 1792371111271,
+      "submittedAt": 1792371164889,
+      "approvedAt": 1792371688206
+    },
+    {
+      "id": "mveefrw4tm2x7",
+      "title": "Folding Edward",
+      "details": "",
+      "category": "Tidying",
+      "credits": 50,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1792362639604,
+      "claimedAt": 1792362666452,
+      "submittedAt": 1792362760583,
+      "approvedAt": 1792362771157
+    },
+    {
+      "id": "mveefcy3jefr3",
+      "title": "Folding Yvette",
+      "details": "",
+      "category": "Tidying",
+      "credits": 50,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u2",
+      "createdAt": 1792362620235,
+      "claimedAt": 1792362683089,
+      "submittedAt": 1792373136946,
+      "approvedAt": 1792373146725
+    },
+    {
+      "id": "mveeevhl52m72",
+      "title": "Yvette pocket money",
+      "details": "",
+      "category": "Pocket money",
+      "credits": 450,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u2",
+      "createdAt": 1792362597609,
+      "claimedAt": 1792362682106,
+      "submittedAt": 1792373141842,
+      "approvedAt": 1792373147529
+    },
+    {
+      "id": "mveeejuydkzes",
+      "title": "Edward Pocket money",
+      "details": "",
+      "category": "Pocket money",
+      "credits": 600,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1792362582539,
+      "claimedAt": 1792362670369,
+      "submittedAt": 1792362759809,
+      "approvedAt": 1792362769717
+    },
+    {
+      "id": "mvbgu635inqad",
+      "title": "Tidy play room and toys downstairs",
+      "details": "Sort out play room and put away toys",
+      "category": "Tidying",
+      "credits": 100,
+      "repeatable": false,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792185271889
+    },
+    {
+      "id": "mvbgs5yfbaamb",
+      "title": "Clean oven top",
+      "details": "",
+      "category": "Cleaning",
+      "credits": 100,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1792185178407,
+      "claimedAt": 1792371180369,
+      "submittedAt": 1792375634133,
+      "approvedAt": 1792375666403
+    },
+    {
+      "id": "mv5inyl4anglu",
+      "title": "Grass seed",
+      "details": "",
+      "category": "Gardening",
+      "credits": 100,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u2",
+      "createdAt": 1791825544412,
+      "claimedAt": 1792185294493,
+      "submittedAt": 1792185305141,
+      "approvedAt": 1792185311173
+    },
+    {
+      "id": "mv2owd089ttnd",
+      "title": "Rake over pool area",
+      "details": "Use the rake to rough up the surface of the soil and grass",
+      "category": "Gardening",
+      "credits": 100,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1791654615512,
+      "claimedAt": 1792180589885,
+      "submittedAt": 1792180614503,
+      "approvedAt": 1792185132197
+    },
+    {
+      "id": "mv2ojddbw2gny",
+      "title": "Edward Pocket money",
+      "details": "",
+      "category": "Pocket money",
+      "credits": 600,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1791654009455,
+      "claimedAt": 1792180261083,
+      "submittedAt": 1792180406972,
+      "approvedAt": 1792185131358
+    },
+    {
+      "id": "mv2oiz1l9s8bt",
+      "title": "Yvette pocket money",
+      "details": "",
+      "category": "Pocket money",
+      "credits": 400,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u2",
+      "createdAt": 1791653990890,
+      "claimedAt": 1792185296137,
+      "submittedAt": 1792185304646,
+      "approvedAt": 1792185310413
+    },
+    {
+      "id": "mv0713mbim2ss",
+      "title": "Empty upstairs bins and add new bags",
+      "details": "Remove bags from all rooms and bathrooms upstairs and put in New bags",
+      "category": "Tidying",
+      "credits": 100,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1791503671187,
+      "claimedAt": 1792371170296,
+      "submittedAt": 1792373104254,
+      "approvedAt": 1792373112805
+    },
+    {
+      "id": "mv06p5rwapjcf",
+      "title": "Clean toilet downstairs",
+      "details": "Use the cleaning chemical and scrub off all the marks",
+      "category": "Cleaning",
+      "credits": 100,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u2",
+      "createdAt": 1791503114108,
+      "claimedAt": 1792374922261,
+      "submittedAt": 1792375143004,
+      "approvedAt": 1792375159336
+    },
+    {
+      "id": "mv06n7hnps40x",
+      "title": "Make bed in guest room",
+      "details": "Make the bed up in the downstairs guest room",
+      "category": "Tidying",
+      "credits": 50,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u2",
+      "createdAt": 1791503023020,
+      "claimedAt": 1791503743176,
+      "submittedAt": 1791651639831,
+      "approvedAt": 1791651911482
+    },
+    {
+      "id": "mv03s2p2gigrq",
+      "title": "Clean kids bathroom",
+      "details": "Tidy all the rubbish away. Clean the toilet bowl with the chemical and brush. Clean the bath and both sinks so they are clean.",
+      "category": "Cleaning",
+      "credits": 200,
+      "repeatable": false,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1791498211238
+    },
+    {
+      "id": "mv03q4cmzly4y",
+      "title": "Mop the floor",
+      "details": "You must first vacuum then I'll all of the hard floors downstairs",
+      "category": "Cleaning",
+      "credits": 200,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1791498120070,
+      "claimedAt": 1792374872281,
+      "submittedAt": 1792375634540,
+      "approvedAt": 1792375667903
+    },
+    {
+      "id": "mv03mf5mizt2q",
+      "title": "Yvette pocket money",
+      "details": "Pocket money",
+      "category": "Pocket money",
+      "credits": 900,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u2",
+      "createdAt": 1791497947450,
+      "claimedAt": 1791497958501,
+      "submittedAt": 1791497964239,
+      "approvedAt": 1791497967103
+    },
+    {
+      "id": "mv03l2pmsz2uv",
+      "title": "Edward Pocket money",
+      "details": "",
+      "category": "Pocket money",
+      "credits": 1150,
+      "repeatable": false,
+      "status": "approved",
+      "assignee": "u1",
+      "createdAt": 1791497884667,
+      "claimedAt": 1791497893181,
+      "submittedAt": 1791497903552,
+      "approvedAt": 1791497907853
+    }
+  ],
+  "ledger": [
+    {
+      "id": "mvhc8ivtvejb6",
+      "opId": "u2",
+      "amount": 200,
+      "reason": "Mission: Dusting blinds",
+      "ts": 1792540340633
+    },
+    {
+      "id": "mvem70lb3gkkh",
+      "opId": "u1",
+      "amount": 200,
+      "reason": "Mission: Mop the floor",
+      "ts": 1792375667903
+    },
+    {
+      "id": "mvem6zfn1bnyx",
+      "opId": "u1",
+      "amount": 100,
+      "reason": "Mission: Clean oven top",
+      "ts": 1792375666403
+    },
+    {
+      "id": "mvelw46gz2w83",
+      "opId": "u2",
+      "amount": 100,
+      "reason": "Mission: Clean toilet downstairs",
+      "ts": 1792375159336
+    },
+    {
+      "id": "mvekozuywx37h",
+      "opId": "u2",
+      "amount": 450,
+      "reason": "Mission: Yvette pocket money",
+      "ts": 1792373147530
+    },
+    {
+      "id": "mvekoz8lpckfh",
+      "opId": "u2",
+      "amount": 50,
+      "reason": "Mission: Folding Yvette",
+      "ts": 1792373146725
+    },
+    {
+      "id": "mveko92ezaaqs",
+      "opId": "u1",
+      "amount": 100,
+      "reason": "Mission: Empty upstairs bins and add new bags",
+      "ts": 1792373112806
+    },
+    {
+      "id": "mvejtpu62ao11",
+      "opId": "u1",
+      "amount": 50,
+      "reason": "Mission: Bins out",
+      "ts": 1792371688206
+    },
+    {
+      "id": "mveeilee6pkkj",
+      "opId": "u1",
+      "amount": 50,
+      "reason": "Mission: Folding Edward",
+      "ts": 1792362771158
+    },
+    {
+      "id": "mveeikad8wtc3",
+      "opId": "u1",
+      "amount": 600,
+      "reason": "Mission: Edward Pocket money",
+      "ts": 1792362769717
+    },
+    {
+      "id": "mvbgv0eeuube7",
+      "opId": "u2",
+      "amount": 100,
+      "reason": "Mission: Grass seed",
+      "ts": 1792185311174
+    },
+    {
+      "id": "mvbguzt9p5m73",
+      "opId": "u2",
+      "amount": 400,
+      "reason": "Mission: Yvette pocket money",
+      "ts": 1792185310413
+    },
+    {
+      "id": "mvbgr6autffx1",
+      "opId": "u1",
+      "amount": 100,
+      "reason": "Mission: Rake over pool area",
+      "ts": 1792185132198
+    },
+    {
+      "id": "mvbgr5njlq92o",
+      "opId": "u1",
+      "amount": 600,
+      "reason": "Mission: Edward Pocket money",
+      "ts": 1792185131359
+    },
+    {
+      "id": "mv2naekakdp9f",
+      "opId": "u2",
+      "amount": 50,
+      "reason": "Mission: Make bed in guest room",
+      "ts": 1791651911482
+    },
+    {
+      "id": "mv03mubjioi9d",
+      "opId": "u2",
+      "amount": 900,
+      "reason": "Mission: Yvette pocket money",
+      "ts": 1791497967103
+    },
+    {
+      "id": "mv03lklp594vo",
+      "opId": "u1",
+      "amount": 1150,
+      "reason": "Mission: Edward Pocket money",
+      "ts": 1791497907853
+    }
+  ],
+  "archive": {
+    "importedAt": 1792591789175,
+    "sourceVersion": 3,
+    "original": {
+      "version": 3,
+      "settings": {
+        "pointsPerUnit": 100,
+        "currency": "$",
+        "teamName": "Operations squadron"
+      },
+      "users": [
+        {
+          "id": "mgr",
+          "name": "Mummy",
+          "role": "manager"
+        },
+        {
+          "id": "u1",
+          "name": "Edward",
+          "role": "member"
+        },
+        {
+          "id": "u2",
+          "name": "Yvette",
+          "role": "member"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "mvel42oc40x2s",
+          "title": "Clean and tidy the pantry",
+          "description": "Take everything  out of the pantry level by level. Clean the floors. Clean. the shelves. Put everything back in tidy and organised.",
+          "category": "Cleaning",
+          "points": 500,
+          "status": "open",
+          "createdAt": "2026-10-19T01:37:31.020Z"
+        },
+        {
+          "id": "mvel2o00uwcm6",
+          "title": "Clean inside the fridge",
+          "description": "Take everything out. Clean the shelves with cleaner spray. Throw away anything mouldy or out of date. Put items tidy back in the fridge.",
+          "category": "Cleaning",
+          "points": 250,
+          "status": "open",
+          "createdAt": "2026-10-19T01:36:25.345Z"
+        },
+        {
+          "id": "mvekqgcb1sclw",
+          "title": "Vacuum the stairs",
+          "description": "Give the stairs a really good vacuum",
+          "category": "Cleaning",
+          "points": 50,
+          "status": "open",
+          "createdAt": "2026-10-19T01:26:55.547Z"
+        },
+        {
+          "id": "mvek0rm0iu5zm",
+          "title": "Clean dining table",
+          "description": "Clear off table. Clean wooden top and placemats with spray or wipes",
+          "category": "Cleaning",
+          "points": 100,
+          "status": "open",
+          "createdAt": "2026-10-19T01:06:57.096Z"
+        },
+        {
+          "id": "mvejzcf3eqpdg",
+          "title": "Dust lounge and clean tables",
+          "description": "Use cloth duster to dust all surfaces in the lounge putting awAy all toys and items as you go. Use wipes or spray to scrub each table clean.",
+          "category": "Cleaning",
+          "points": 200,
+          "status": "in_progress",
+          "createdAt": "2026-10-19T01:05:50.751Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-20T23:55:27.328Z"
+        },
+        {
+          "id": "mvejx43ofwfvo",
+          "title": "Dusting blinds",
+          "description": "Use the duster to clean the blinds in the whole house.",
+          "category": "Cleaning",
+          "points": 200,
+          "status": "done",
+          "createdAt": "2026-10-19T01:04:06.660Z",
+          "assignee": "u2",
+          "claimedAt": "2026-10-20T13:59:26.423Z",
+          "submittedAt": "2026-10-20T23:52:00.067Z",
+          "approvedAt": "2026-10-20T23:52:20.633Z"
+        },
+        {
+          "id": "mvejvxcximp3w",
+          "title": "Kitchen clean",
+          "description": "Deep clean the kitchen. Clear each counter completely, spray cleaner and scrub off. Clean doors of cupboard. Clean front of dishwasher.",
+          "category": "Cleaning",
+          "points": 500,
+          "status": "open",
+          "createdAt": "2026-10-19T01:03:11.265Z"
+        },
+        {
+          "id": "mvehw6brl3d5h",
+          "title": "Bins out",
+          "description": "",
+          "category": "Gardening",
+          "points": 50,
+          "status": "done",
+          "createdAt": "2026-10-19T00:07:23.655Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-19T00:51:51.271Z",
+          "submittedAt": "2026-10-19T00:52:44.889Z",
+          "approvedAt": "2026-10-19T01:01:28.206Z"
+        },
+        {
+          "id": "mveefrw4tm2x7",
+          "title": "Folding Edward",
+          "description": "",
+          "category": "Tidying",
+          "points": 50,
+          "status": "done",
+          "createdAt": "2026-10-18T22:30:39.604Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-18T22:31:06.452Z",
+          "submittedAt": "2026-10-18T22:32:40.583Z",
+          "approvedAt": "2026-10-18T22:32:51.157Z"
+        },
+        {
+          "id": "mveefcy3jefr3",
+          "title": "Folding Yvette",
+          "description": "",
+          "category": "Tidying",
+          "points": 50,
+          "status": "done",
+          "createdAt": "2026-10-18T22:30:20.235Z",
+          "assignee": "u2",
+          "claimedAt": "2026-10-18T22:31:23.089Z",
+          "submittedAt": "2026-10-19T01:25:36.946Z",
+          "approvedAt": "2026-10-19T01:25:46.725Z"
+        },
+        {
+          "id": "mveeevhl52m72",
+          "title": "Yvette pocket money",
+          "description": "",
+          "category": "Pocket money",
+          "points": 450,
+          "status": "done",
+          "createdAt": "2026-10-18T22:29:57.609Z",
+          "assignee": "u2",
+          "claimedAt": "2026-10-18T22:31:22.106Z",
+          "submittedAt": "2026-10-19T01:25:41.842Z",
+          "approvedAt": "2026-10-19T01:25:47.529Z"
+        },
+        {
+          "id": "mveeejuydkzes",
+          "title": "Edward Pocket money",
+          "description": "",
+          "category": "Pocket money",
+          "points": 600,
+          "status": "done",
+          "createdAt": "2026-10-18T22:29:42.539Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-18T22:31:10.369Z",
+          "submittedAt": "2026-10-18T22:32:39.809Z",
+          "approvedAt": "2026-10-18T22:32:49.717Z"
+        },
+        {
+          "id": "mvbgu635inqad",
+          "title": "Tidy play room and toys downstairs",
+          "description": "Sort out play room and put away toys",
+          "category": "Tidying",
+          "points": 100,
+          "status": "open",
+          "createdAt": "2026-10-16T21:14:31.889Z"
+        },
+        {
+          "id": "mvbgs5yfbaamb",
+          "title": "Clean oven top",
+          "description": "",
+          "category": "Cleaning",
+          "points": 100,
+          "status": "done",
+          "createdAt": "2026-10-16T21:12:58.407Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-19T00:53:00.369Z",
+          "submittedAt": "2026-10-19T02:07:14.133Z",
+          "approvedAt": "2026-10-19T02:07:46.403Z"
+        },
+        {
+          "id": "mv5inyl4anglu",
+          "title": "Grass seed",
+          "description": "",
+          "category": "Gardening",
+          "points": 100,
+          "status": "done",
+          "createdAt": "2026-10-12T17:19:04.412Z",
+          "assignee": "u2",
+          "claimedAt": "2026-10-16T21:14:54.493Z",
+          "submittedAt": "2026-10-16T21:15:05.141Z",
+          "approvedAt": "2026-10-16T21:15:11.173Z"
+        },
+        {
+          "id": "mv2owd089ttnd",
+          "title": "Rake over pool area",
+          "description": "Use the rake to rough up the surface of the soil and grass",
+          "category": "Gardening",
+          "points": 100,
+          "status": "done",
+          "createdAt": "2026-10-10T17:50:15.512Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-16T19:56:29.885Z",
+          "submittedAt": "2026-10-16T19:56:54.503Z",
+          "approvedAt": "2026-10-16T21:12:12.197Z"
+        },
+        {
+          "id": "mv2ojddbw2gny",
+          "title": "Edward Pocket money",
+          "description": "",
+          "category": "Pocket money",
+          "points": 600,
+          "status": "done",
+          "createdAt": "2026-10-10T17:40:09.455Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-16T19:51:01.083Z",
+          "submittedAt": "2026-10-16T19:53:26.972Z",
+          "approvedAt": "2026-10-16T21:12:11.358Z"
+        },
+        {
+          "id": "mv2oiz1l9s8bt",
+          "title": "Yvette pocket money",
+          "description": "",
+          "category": "Pocket money",
+          "points": 400,
+          "status": "done",
+          "createdAt": "2026-10-10T17:39:50.890Z",
+          "assignee": "u2",
+          "claimedAt": "2026-10-16T21:14:56.137Z",
+          "submittedAt": "2026-10-16T21:15:04.646Z",
+          "approvedAt": "2026-10-16T21:15:10.413Z"
+        },
+        {
+          "id": "mv0713mbim2ss",
+          "title": "Empty upstairs bins and add new bags",
+          "description": "Remove bags from all rooms and bathrooms upstairs and put in New bags",
+          "category": "Tidying",
+          "points": 100,
+          "status": "done",
+          "createdAt": "2026-10-08T23:54:31.187Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-19T00:52:50.296Z",
+          "submittedAt": "2026-10-19T01:25:04.254Z",
+          "approvedAt": "2026-10-19T01:25:12.805Z"
+        },
+        {
+          "id": "mv06p5rwapjcf",
+          "title": "Clean toilet downstairs",
+          "description": "Use the cleaning chemical and scrub off all the marks",
+          "category": "Cleaning",
+          "points": 100,
+          "status": "done",
+          "createdAt": "2026-10-08T23:45:14.108Z",
+          "assignee": "u2",
+          "claimedAt": "2026-10-19T01:55:22.261Z",
+          "submittedAt": "2026-10-19T01:59:03.004Z",
+          "approvedAt": "2026-10-19T01:59:19.336Z"
+        },
+        {
+          "id": "mv06n7hnps40x",
+          "title": "Make bed in guest room",
+          "description": "Make the bed up in the downstairs guest room",
+          "category": "Tidying",
+          "points": 50,
+          "status": "done",
+          "createdAt": "2026-10-08T23:43:43.020Z",
+          "assignee": "u2",
+          "claimedAt": "2026-10-08T23:55:43.176Z",
+          "submittedAt": "2026-10-10T17:00:39.831Z",
+          "approvedAt": "2026-10-10T17:05:11.482Z"
+        },
+        {
+          "id": "mv03s2p2gigrq",
+          "title": "Clean kids bathroom",
+          "description": "Tidy all the rubbish away. Clean the toilet bowl with the chemical and brush. Clean the bath and both sinks so they are clean.",
+          "category": "Cleaning",
+          "points": 200,
+          "status": "open",
+          "createdAt": "2026-10-08T22:23:31.238Z"
+        },
+        {
+          "id": "mv03q4cmzly4y",
+          "title": "Mop the floor",
+          "description": "You must first vacuum then I'll all of the hard floors downstairs",
+          "category": "Cleaning",
+          "points": 200,
+          "status": "done",
+          "createdAt": "2026-10-08T22:22:00.070Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-19T01:54:32.281Z",
+          "submittedAt": "2026-10-19T02:07:14.540Z",
+          "approvedAt": "2026-10-19T02:07:47.903Z"
+        },
+        {
+          "id": "mv03mf5mizt2q",
+          "title": "Yvette pocket money",
+          "description": "Pocket money",
+          "category": "Pocket money",
+          "points": 900,
+          "status": "done",
+          "createdAt": "2026-10-08T22:19:07.450Z",
+          "assignee": "u2",
+          "claimedAt": "2026-10-08T22:19:18.501Z",
+          "submittedAt": "2026-10-08T22:19:24.239Z",
+          "approvedAt": "2026-10-08T22:19:27.103Z"
+        },
+        {
+          "id": "mv03l2pmsz2uv",
+          "title": "Edward Pocket money",
+          "description": "",
+          "category": "Pocket money",
+          "points": 1150,
+          "status": "done",
+          "createdAt": "2026-10-08T22:18:04.667Z",
+          "assignee": "u1",
+          "claimedAt": "2026-10-08T22:18:13.181Z",
+          "submittedAt": "2026-10-08T22:18:23.552Z",
+          "approvedAt": "2026-10-08T22:18:27.853Z"
+        }
+      ],
+      "ledger": [
+        {
+          "id": "mvhc8ivtvejb6",
+          "userId": "u2",
+          "type": "earn",
+          "source": "task",
+          "title": "Dusting blinds",
+          "points": 200,
+          "at": "2026-10-20T23:52:20.633Z"
+        },
+        {
+          "id": "mvem70lb3gkkh",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Mop the floor",
+          "points": 200,
+          "at": "2026-10-19T02:07:47.903Z"
+        },
+        {
+          "id": "mvem6zfn1bnyx",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Clean oven top",
+          "points": 100,
+          "at": "2026-10-19T02:07:46.403Z"
+        },
+        {
+          "id": "mvelw46gz2w83",
+          "userId": "u2",
+          "type": "earn",
+          "source": "task",
+          "title": "Clean toilet downstairs",
+          "points": 100,
+          "at": "2026-10-19T01:59:19.336Z"
+        },
+        {
+          "id": "mvekozuywx37h",
+          "userId": "u2",
+          "type": "earn",
+          "source": "task",
+          "title": "Yvette pocket money",
+          "points": 450,
+          "at": "2026-10-19T01:25:47.530Z"
+        },
+        {
+          "id": "mvekoz8lpckfh",
+          "userId": "u2",
+          "type": "earn",
+          "source": "task",
+          "title": "Folding Yvette",
+          "points": 50,
+          "at": "2026-10-19T01:25:46.725Z"
+        },
+        {
+          "id": "mveko92ezaaqs",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Empty upstairs bins and add new bags",
+          "points": 100,
+          "at": "2026-10-19T01:25:12.806Z"
+        },
+        {
+          "id": "mvejtpu62ao11",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Bins out",
+          "points": 50,
+          "at": "2026-10-19T01:01:28.206Z"
+        },
+        {
+          "id": "mveeilee6pkkj",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Folding Edward",
+          "points": 50,
+          "at": "2026-10-18T22:32:51.158Z"
+        },
+        {
+          "id": "mveeikad8wtc3",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Edward Pocket money",
+          "points": 600,
+          "at": "2026-10-18T22:32:49.717Z"
+        },
+        {
+          "id": "mvbgv0eeuube7",
+          "userId": "u2",
+          "type": "earn",
+          "source": "task",
+          "title": "Grass seed",
+          "points": 100,
+          "at": "2026-10-16T21:15:11.174Z"
+        },
+        {
+          "id": "mvbguzt9p5m73",
+          "userId": "u2",
+          "type": "earn",
+          "source": "task",
+          "title": "Yvette pocket money",
+          "points": 400,
+          "at": "2026-10-16T21:15:10.413Z"
+        },
+        {
+          "id": "mvbgr6autffx1",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Rake over pool area",
+          "points": 100,
+          "at": "2026-10-16T21:12:12.198Z"
+        },
+        {
+          "id": "mvbgr5njlq92o",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Edward Pocket money",
+          "points": 600,
+          "at": "2026-10-16T21:12:11.359Z"
+        },
+        {
+          "id": "mv2naekakdp9f",
+          "userId": "u2",
+          "type": "earn",
+          "source": "task",
+          "title": "Make bed in guest room",
+          "points": 50,
+          "at": "2026-10-10T17:05:11.482Z"
+        },
+        {
+          "id": "mv03mubjioi9d",
+          "userId": "u2",
+          "type": "earn",
+          "source": "task",
+          "title": "Yvette pocket money",
+          "points": 900,
+          "at": "2026-10-08T22:19:27.103Z"
+        },
+        {
+          "id": "mv03lklp594vo",
+          "userId": "u1",
+          "type": "earn",
+          "source": "task",
+          "title": "Edward Pocket money",
+          "points": 1150,
+          "at": "2026-10-08T22:18:27.853Z"
+        }
+      ],
+      "decisions": [
+        {
+          "id": "mvhc8ivu9g30z",
+          "userId": "u2",
+          "kind": "task",
+          "title": "Dusting blinds",
+          "points": 200,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-20T23:52:20.634Z"
+        },
+        {
+          "id": "mvem70lbik94g",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Mop the floor",
+          "points": 200,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-19T02:07:47.903Z"
+        },
+        {
+          "id": "mvem6zfneo11v",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Clean oven top",
+          "points": 100,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-19T02:07:46.403Z"
+        },
+        {
+          "id": "mvelw46gxwpfh",
+          "userId": "u2",
+          "kind": "task",
+          "title": "Clean toilet downstairs",
+          "points": 100,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-19T01:59:19.336Z"
+        },
+        {
+          "id": "mvekozuy4bb46",
+          "userId": "u2",
+          "kind": "task",
+          "title": "Yvette pocket money",
+          "points": 450,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-19T01:25:47.530Z"
+        },
+        {
+          "id": "mvekoz8lprh0r",
+          "userId": "u2",
+          "kind": "task",
+          "title": "Folding Yvette",
+          "points": 50,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-19T01:25:46.725Z"
+        },
+        {
+          "id": "mveko92gx6gw0",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Empty upstairs bins and add new bags",
+          "points": 100,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-19T01:25:12.808Z"
+        },
+        {
+          "id": "mvejtpu61ywx0",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Bins out",
+          "points": 50,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-19T01:01:28.206Z"
+        },
+        {
+          "id": "mveeilee1fkzr",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Folding Edward",
+          "points": 50,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-18T22:32:51.158Z"
+        },
+        {
+          "id": "mveeikadof1i2",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Edward Pocket money",
+          "points": 600,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-18T22:32:49.717Z"
+        },
+        {
+          "id": "mvbgv0eew3zvw",
+          "userId": "u2",
+          "kind": "task",
+          "title": "Grass seed",
+          "points": 100,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-16T21:15:11.174Z"
+        },
+        {
+          "id": "mvbguzt98e6v7",
+          "userId": "u2",
+          "kind": "task",
+          "title": "Yvette pocket money",
+          "points": 400,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-16T21:15:10.413Z"
+        },
+        {
+          "id": "mvbgr6auxyqe6",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Rake over pool area",
+          "points": 100,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-16T21:12:12.198Z"
+        },
+        {
+          "id": "mvbgr5njerv38",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Edward Pocket money",
+          "points": 600,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-16T21:12:11.359Z"
+        },
+        {
+          "id": "mv2naekc94bue",
+          "userId": "u2",
+          "kind": "task",
+          "title": "Make bed in guest room",
+          "points": 50,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-10T17:05:11.484Z"
+        },
+        {
+          "id": "mv03mubj578f5",
+          "userId": "u2",
+          "kind": "task",
+          "title": "Yvette pocket money",
+          "points": 900,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-08T22:19:27.103Z"
+        },
+        {
+          "id": "mv03lklpuys2u",
+          "userId": "u1",
+          "kind": "task",
+          "title": "Edward Pocket money",
+          "points": 1150,
+          "decision": "approved",
+          "note": "",
+          "at": "2026-10-08T22:18:27.853Z"
+        }
+      ],
+      "goals": {
+        "u1": {
+          "name": "Build a Droid",
+          "target": 13000,
+          "blueprint": "droid",
+          "seenStage": 0,
+          "setAt": "2026-10-08T22:20:08.145Z"
+        },
+        "u2": {
+          "name": "Baby Yoda shoulder buddy",
+          "target": 3800,
+          "blueprint": "axolotl",
+          "seenStage": 2,
+          "setAt": "2026-10-09T13:39:52.862Z"
+        }
+      }
+    }
+  }
+}

@@ -147,7 +147,7 @@
 </dialog>
 
 <div id="toasts" class="fixed bottom-4 right-4 z-50 flex max-w-sm flex-col gap-2" aria-live="polite"></div>
-<input type="file" id="importFile" accept="application/json,.json" class="hidden">
+<input type="file" id="importFile" class="hidden">
 
 <script>
 (() => {
@@ -721,7 +721,9 @@
         <button class="btn btn-ghost" data-act="export">Export</button>
         <button class="btn btn-ghost" data-act="import">Import</button>
         <button class="btn btn-red" data-act="reset">Reset</button>
-      </div>`);
+      </div>
+      <button class="btn btn-amber mt-2 w-full" data-act="importWeb">Import from website</button>
+      <p class="mt-1 text-xs text-slate-500">Loads a backup file uploaded next to index.html on GitHub. Delete it from GitHub afterwards.</p>`);
   }
 
   /* ---------- Operative view ---------- */
@@ -958,6 +960,17 @@
       toast('Backup exported.');
     },
     import: () => document.getElementById('importFile').click(),
+    importWeb: async () => {
+      const name = prompt('Backup file name on the website:', 'backup.json');
+      if (!name) return;
+      try {
+        const res = await fetch(name.trim(), { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        importText(await res.text());
+      } catch (err) {
+        toast(`Could not load "${name}". Check it is uploaded next to index.html and the name matches exactly.`, 'warn');
+      }
+    },
     reset: () => {
       if (!confirm('Reset all data? This erases missions, Credits and settings in this browser.')) return;
       state = defaultState(); ui.missionFilter = 'active';
@@ -1028,27 +1041,27 @@
     commit();
   });
 
+  function importText(text) {
+    let data;
+    try { data = JSON.parse(text); } catch (err) { toast('Import failed: this file is not a recognised tracker backup.', 'warn'); return; }
+    let next, summary;
+    if (isLegacy(data)) {
+      next = convertLegacy(data);
+      summary = 'Backup from the previous tracker detected. It will be converted as follows:\n\n';
+    } else if (data && Array.isArray(data.operatives)) {
+      next = migrate(data);
+      summary = 'Restore this backup?\n\n';
+    } else { toast('Import failed: this file is not a recognised tracker backup.', 'warn'); return; }
+    summary += next.operatives.map(o => `${o.name}: ${o.credits} CR, goal ${o.goal.target} CR`).join('\n');
+    summary += `\n${next.missions.length} missions, ${next.ledger.length} vault entries.\n\nThis replaces the data currently in this browser. Continue?`;
+    if (!confirm(summary)) return;
+    state = next; commit(); toast('Backup imported. All balances restored.', 'gold');
+  }
+
   document.getElementById('importFile').addEventListener('change', e => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result);
-        let next, summary;
-        if (isLegacy(data)) {
-          next = convertLegacy(data);
-          summary = 'Backup from the previous tracker detected. It will be converted as follows:\n\n';
-        } else if (Array.isArray(data.operatives)) {
-          next = migrate(data);
-          summary = 'Restore this backup?\n\n';
-        } else throw new Error('Unrecognised file');
-        summary += next.operatives.map(o => `${o.name}: ${o.credits} CR, goal ${o.goal.target} CR`).join('\n');
-        summary += `\n${next.missions.length} missions, ${next.ledger.length} vault entries.\n\nThis replaces the data currently in this browser. Continue?`;
-        if (!confirm(summary)) { e.target.value = ''; return; }
-        state = next; commit(); toast('Backup imported. All balances restored.', 'gold');
-      } catch (err) { toast('Import failed: this file is not a recognised tracker backup.', 'warn'); }
-      e.target.value = '';
-    };
+    reader.onload = () => { importText(reader.result); e.target.value = ''; };
     reader.readAsText(file);
   });
 
