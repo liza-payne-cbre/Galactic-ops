@@ -1,1326 +1,1071 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
-<title>Galactic Ops Terminal</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%2338bdf8' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23fbbf24'/%3E%3C/svg%3E">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galactic Operations Task &amp; Credit Tracker</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛰️</text></svg>">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700;800&family=Chakra+Petch:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Oxanium', 'Trebuchet MS', 'sans-serif'],
+          body: ['"Chakra Petch"', 'Segoe UI', 'system-ui', 'sans-serif']
+        }
+      }
+    }
+  };
+</script>
 <style>
-/* ======================================================
-   Galactic Ops Terminal, Rev 2
-   ====================================================== */
-:root{
-  --bg:#0f172a;
-  --panel:#131e36;
-  --panel-deep:#0b1324;
-  --line:rgba(56,189,248,.16);
-  --line-strong:rgba(56,189,248,.42);
-  --cyan:#38bdf8;
-  --cyan-bright:#22d3ee;
-  --cyan-wash:rgba(56,189,248,.10);
-  --amber:#fbbf24;
-  --amber-wash:rgba(251,191,36,.12);
-  --text:#cbd5e1;
-  --dim:#8fa1b8;
-  --head:#e8f4ff;
-  --font-display:"Chakra Petch","Segoe UI",Roboto,sans-serif;
-  --font-body:"IBM Plex Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --r:8px;
-  box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
-  color-scheme:dark;
-}
-*,*::before,*::after{box-sizing:inherit}
-html{-webkit-text-size-adjust:100%;background:var(--bg)}
-body{margin:0;min-height:100vh;color:var(--text);font:15px/1.55 var(--font-body);-webkit-tap-highlight-color:transparent;
-  background:radial-gradient(1200px 500px at 85% -10%,rgba(56,189,248,.10),transparent 60%),radial-gradient(900px 400px at -10% 110%,rgba(251,191,36,.05),transparent 60%),var(--bg);background-attachment:fixed}
-h1,h2,h3{font-family:var(--font-display);color:var(--head);margin:0;font-weight:600;line-height:1.2;letter-spacing:.01em}
-p{margin:0}
-button,input,select,textarea{font:inherit;color:inherit}
-button,select,label,input[type="checkbox"],input[type="radio"]{touch-action:manipulation}
-:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  :root { --void:#0b0f19; --cyan:#06b6d4; --amber:#f59e0b; --panel:#1e293b; }
+  html { background: var(--void); }
+  body {
+    font-family: 'Chakra Petch', 'Segoe UI', system-ui, sans-serif;
+    color: #cbd5e1;
+    min-height: 100vh;
+    background:
+      radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(1px 1px at 72% 12%, rgba(255,255,255,.4), transparent 60%),
+      radial-gradient(1.5px 1.5px at 40% 66%, rgba(103,232,249,.5), transparent 60%),
+      radial-gradient(1px 1px at 88% 52%, rgba(255,255,255,.45), transparent 60%),
+      radial-gradient(1px 1px at 22% 84%, rgba(255,255,255,.35), transparent 60%),
+      radial-gradient(1.5px 1.5px at 60% 34%, rgba(253,230,138,.4), transparent 60%),
+      radial-gradient(1200px 600px at 80% -10%, rgba(6,182,212,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(245,158,11,.06), transparent 60%),
+      var(--void);
+    background-attachment: fixed;
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 60;
+    background: repeating-linear-gradient(to bottom, rgba(255,255,255,.018) 0 1px, transparent 1px 3px);
+  }
+  .glow-text { text-shadow: 0 0 10px rgba(6,182,212,.55); }
+  .glow-amber { text-shadow: 0 0 12px rgba(245,158,11,.5); }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 6px; }
 
-/* ---------- Header ---------- */
-.topbar{position:relative;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;border-bottom:1px solid var(--line);
-  background:
-    radial-gradient(1px 1px at 12% 30%,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 28% 70%,rgba(255,255,255,.5),transparent),
-    radial-gradient(1.5px 1.5px at 46% 20%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 63% 60%,rgba(255,255,255,.5),transparent),
-    radial-gradient(1px 1px at 78% 25%,rgba(255,255,255,.6),transparent),radial-gradient(1.5px 1.5px at 92% 75%,rgba(255,255,255,.5),transparent),
-    linear-gradient(180deg,#0b1222,#0f172a)}
-.brand{display:flex;align-items:center;gap:14px}
-.sigil{width:44px;height:44px;flex:none}
-.topbar h1{font-size:22px;color:var(--head)}
-.rev{display:inline-block;margin-left:10px;padding:2px 8px;border:1px solid var(--amber);border-radius:4px;color:var(--amber);font:600 12px var(--font-display);vertical-align:3px}
-.topbar .date{color:var(--dim);font-size:13px;margin-top:2px}
-.who{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.who-label{font-size:13px;color:var(--dim);margin-right:4px}
-.person{display:inline-flex;align-items:center;gap:10px;min-height:56px;padding:6px 18px 6px 6px;border-radius:28px;border:2px solid var(--line-strong);background:rgba(15,23,42,.6);color:var(--text);font-size:14px;cursor:pointer;text-align:left}
-.person .avatar{width:42px;height:42px;font-size:14px}
-.person[aria-pressed="true"]{border-color:var(--cyan);background:var(--cyan-wash);color:var(--head);box-shadow:0 0 18px rgba(56,189,248,.25)}
-.person[aria-pressed="true"] .avatar{background:var(--cyan);color:var(--bg)}
-.person:active{transform:scale(.97)}
-.person .role{display:block;font-size:11px;color:var(--dim)}
-.person[aria-pressed="true"] .role{color:var(--cyan)}
+  /* Blueprint SVG parts */
+  .part-locked { opacity: .55; }
+  .part-locked * {
+    fill: none !important; stroke: var(--cyan) !important;
+    stroke-dasharray: 4 3; stroke-opacity: .5; stroke-width: 1.5 !important;
+    animation: none !important;
+  }
+  .part-new { animation: materialize 1.1s ease-out; transform-box: fill-box; transform-origin: center; }
+  .blink { animation: blink 1.6s steps(2, end) infinite; }
+  .pulse-core { animation: pulseCore 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .scan { animation: scan 2.6s ease-in-out infinite alternate; }
+  .victory { animation: float 3.2s ease-in-out infinite; }
+  .halo { animation: halo 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .twinkle { animation: twinkle 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 
-/* ---------- Profile strip ---------- */
-.profile{border-bottom:1px solid var(--line);background:rgba(11,19,36,.55)}
-.profile-inner{max-width:1240px;margin:0 auto;padding:18px 24px;display:grid;grid-template-columns:minmax(200px,1fr) auto auto;gap:16px 40px;align-items:center}
-.identity{display:flex;align-items:center;gap:14px}
-.avatar{width:46px;height:46px;border-radius:50%;background:var(--panel);border:2px solid var(--cyan);color:var(--cyan);display:grid;place-items:center;font:700 15px var(--font-display);flex:none}
-.avatar.sm{width:36px;height:36px;font-size:12px}
-.avatar.cmd{border-color:var(--amber);color:var(--amber)}
-.identity h2{font-size:20px}
-.identity p{font-size:13px;color:var(--dim)}
-.vault{display:flex;flex-direction:column;gap:2px;padding-left:20px;border-left:3px solid var(--amber)}
-.vault .lbl{font-size:12px;color:var(--dim)}
-.vault .big{font:700 34px/1.05 var(--font-display);color:var(--amber);text-shadow:0 0 18px rgba(251,191,36,.35)}
-.vault .big small{font-size:14px;font-weight:500;margin-left:6px;color:var(--dim);text-shadow:none}
-.vault .equiv{font-size:12px;color:var(--cyan)}
-.stats{display:flex;gap:28px;margin:0}
-.stats div{display:flex;flex-direction:column}
-.stats dt{font-size:12px;color:var(--dim)}
-.stats dd{margin:0;font:700 20px var(--font-display);color:var(--head)}
+  @keyframes materialize {
+    0% { opacity: 0; transform: scale(.7); filter: brightness(3) drop-shadow(0 0 8px #06b6d4); }
+    60% { opacity: 1; filter: brightness(1.8) drop-shadow(0 0 6px #06b6d4); }
+    100% { transform: scale(1); filter: none; }
+  }
+  @keyframes blink { 50% { opacity: .25; } }
+  @keyframes pulseCore { 50% { transform: scale(1.12); opacity: .8; } }
+  @keyframes scan { from { transform: translateX(0); } to { transform: translateX(34px); } }
+  @keyframes float { 50% { transform: translateY(-6px); } }
+  @keyframes halo { 50% { opacity: .5; transform: scale(1.06); } }
+  @keyframes twinkle { 0%,100% { opacity: 0; transform: scale(.4); } 50% { opacity: 1; transform: scale(1); } }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes confetti { to { transform: translate(var(--dx), 105vh) rotate(720deg); opacity: .8; } }
 
-/* ---------- Tabs ---------- */
-.tabs-wrap{background:rgba(11,19,36,.92);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;backdrop-filter:blur(6px)}
-.tabs{max-width:1240px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{position:relative;background:none;border:0;padding:0 20px;min-height:60px;cursor:pointer;color:var(--dim);font:500 15px var(--font-display);white-space:nowrap;display:flex;align-items:center;gap:8px;letter-spacing:.02em}
-.tab[aria-selected="true"]{color:var(--head)}
-.tab[aria-selected="true"]::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:3px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);border-radius:3px 3px 0 0}
-.count{min-width:24px;height:24px;padding:0 7px;border-radius:12px;background:var(--amber);color:var(--bg);font:700 12px var(--font-body);display:inline-grid;place-items:center}
+  .confetti-bit { position: fixed; top: -12px; width: 8px; height: 14px; z-index: 70; pointer-events: none; animation: confetti var(--t) cubic-bezier(.2,.6,.4,1) forwards; }
 
-/* ---------- Layout ---------- */
-main{max-width:1240px;margin:0 auto;padding:22px 24px 56px}
-.stack{display:grid;gap:20px}
-.grid-2{display:grid;gap:20px;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start}
-.grid-2>*,.grid-3>*,.stack>*{min-width:0}
-.grid-3{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));align-items:start}
-.panel{background:linear-gradient(180deg,rgba(19,30,54,.95),rgba(15,24,44,.95));border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;box-shadow:inset 0 1px 0 rgba(56,189,248,.08)}
-.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.panel h2{font-size:19px}
-.panel h3{font-size:16px}
-.sub{font-size:13px;margin-top:3px;color:var(--dim)}
-.section-title{font-size:19px;margin:6px 0 12px}
-.empty{padding:24px 16px;text-align:center;background:var(--panel-deep);border:1px dashed var(--line-strong);border-radius:6px;font-size:14px;color:var(--dim)}
-.empty strong{display:block;color:var(--head);font:600 16px var(--font-display);margin-bottom:4px}
-
-/* ---------- Buttons ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:52px;padding:0 22px;border-radius:6px;border:2px solid var(--cyan);background:var(--cyan);color:#06111f;font:600 15px var(--font-display);letter-spacing:.02em;cursor:pointer;white-space:nowrap}
-.btn.secondary{background:transparent;color:var(--cyan)}
-.btn.ghost{background:transparent;border-color:var(--line-strong);color:var(--text)}
-.btn.accent{background:var(--amber);border-color:var(--amber);color:#1a1204}
-.btn.small{min-height:48px;padding:0 18px;font-size:14px}
-.btn:active{transform:scale(.97)}
-.btn[disabled]{opacity:.4;cursor:not-allowed}
-@media (hover:hover){
-  .btn:hover{box-shadow:0 0 16px rgba(56,189,248,.45)}
-  .btn.accent:hover{box-shadow:0 0 16px rgba(251,191,36,.45)}
-  .btn.ghost:hover,.btn.secondary:hover{background:var(--cyan-wash)}
-}
-.btn-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-
-/* ---------- Chips and credits ---------- */
-.chip{display:inline-flex;align-items:center;font-size:12px;line-height:1;padding:7px 11px;border-radius:999px;border:1px solid var(--line-strong);color:var(--dim);white-space:nowrap}
-.chip.pending{border-color:var(--amber);color:var(--amber);background:var(--amber-wash)}
-.chip.approved{background:var(--cyan);border-color:var(--cyan);color:#06111f;font-weight:600}
-.chip.progress{background:var(--cyan-wash);border-color:transparent;color:var(--cyan)}
-.chip.returned{border-style:dashed;color:var(--text)}
-.cr{font:700 15px var(--font-display);color:var(--amber);white-space:nowrap}
-.cr.neg{color:var(--dim)}
-.note{display:block;margin-top:8px;padding:8px 12px;border-left:3px solid var(--amber);background:var(--amber-wash);font-size:13px;color:var(--text)}
-
-/* ---------- Rows ---------- */
-.rows{list-style:none;margin:0;padding:0}
-.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 16px;align-items:center;padding:18px 0;border-top:1px solid var(--line)}
-.row:first-child{border-top:0;padding-top:4px}
-.row-title{color:var(--head);font-weight:600;font-size:16px}
-.row-meta{font-size:13px;color:var(--dim);display:flex;gap:6px 12px;flex-wrap:wrap;align-items:center;margin-top:4px}
-.row-actions{display:flex;gap:12px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
-.who-line{display:flex;align-items:center;gap:12px}
-
-/* ---------- Mission board ---------- */
-.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.filter{min-height:48px;padding:0 22px;border-radius:999px;border:2px solid var(--line-strong);background:transparent;color:var(--text);font:500 14px var(--font-display);cursor:pointer}
-.filter[aria-pressed="true"]{background:var(--cyan);border-color:var(--cyan);color:#06111f}
-.filter:active{transform:scale(.97)}
-.tickets{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
-.ticket{display:grid;grid-template-columns:100px minmax(0,1fr);background:var(--panel-deep);border:1px solid var(--line-strong);border-radius:var(--r);overflow:hidden}
-.stub{background:linear-gradient(180deg,rgba(251,191,36,.10),rgba(251,191,36,.02));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 8px;text-align:center;border-right:2px dashed var(--line-strong)}
-.stub-cr{font:700 30px/1 var(--font-display);color:var(--amber);text-shadow:0 0 14px rgba(251,191,36,.4)}
-.stub-unit{font-size:11px;color:var(--dim);margin-top:4px}
-.stub-money{margin-top:10px;font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--cyan);color:var(--cyan)}
-.ticket-body{padding:16px 18px;display:flex;flex-direction:column;gap:6px}
-.ticket-body h3{font-size:17px}
-.ticket-body p{font-size:14px;color:var(--dim)}
-.cat{font:600 12px var(--font-display);color:var(--cyan);letter-spacing:.04em}
-.ticket-foot{margin-top:auto;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-
-/* ---------- Goal and Blueprint Bay (signature element) ---------- */
-.bay{display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:24px;align-items:center;border-color:var(--line-strong)}
-.bay-visual{position:relative;border:1px solid var(--line-strong);border-radius:var(--r);background:radial-gradient(circle at 50% 60%,rgba(56,189,248,.12),rgba(11,19,36,.95) 70%);aspect-ratio:1/1;overflow:hidden}
-.bay-visual::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(56,189,248,.04) 0 2px,transparent 2px 5px)}
-.bay-visual svg{display:block;width:100%;height:100%}
-.bay-tag{position:absolute;left:10px;top:10px;font:600 12px var(--font-display);color:var(--cyan);background:rgba(11,19,36,.8);border:1px solid var(--line-strong);border-radius:4px;padding:3px 8px;z-index:1}
-.bay-tag.done{color:var(--amber);border-color:var(--amber)}
-.goal-name{font:700 26px/1.15 var(--font-display);color:var(--amber);margin:6px 0 14px;text-shadow:0 0 16px rgba(251,191,36,.25)}
-.meter{position:relative;height:18px;border-radius:9px;background:var(--panel-deep);border:1px solid var(--line-strong);overflow:hidden}
-.meter-fill{height:100%;background:linear-gradient(90deg,#0ea5e9,var(--cyan-bright));box-shadow:0 0 14px rgba(34,211,238,.6);border-radius:9px;transition:width .8s ease}
-.meter-fill.full{background:linear-gradient(90deg,#f59e0b,var(--amber));box-shadow:0 0 14px rgba(251,191,36,.6)}
-.meter-ticks span{position:absolute;top:0;bottom:0;width:2px;background:rgba(11,19,36,.9)}
-.meter-row{display:flex;justify-content:space-between;align-items:baseline;margin:10px 0 0;font-size:13px;color:var(--dim)}
-.meter-row strong{font:700 22px var(--font-display);color:var(--head)}
-.goal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
-.goal-stats div{background:var(--panel-deep);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--dim)}
-.goal-stats strong{display:block;font:700 19px var(--font-display);color:var(--head)}
-.stages{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.stage{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;border:1px dashed var(--line-strong);font-size:13px;color:var(--dim)}
-.stage b{font:600 12px var(--font-display);min-width:38px;color:var(--dim)}
-.stage.on{border-style:solid;border-color:var(--cyan);background:var(--cyan-wash);color:var(--head)}
-.stage.on b{color:var(--cyan)}
-.stage .lock{margin-left:auto;font-size:12px;white-space:nowrap}
-.mini-goal{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
-.mini-goal .bay-visual{aspect-ratio:1/1}
-.mini-goal .goal-line{font:600 14px var(--font-display);color:var(--amber);margin-bottom:6px}
-.mini-goal .meter{height:10px}
-
-/* Blueprint SVG layers */
-.bp .ghost *{fill:none!important;stroke:rgba(56,189,248,.55)!important;stroke-width:1.4!important;stroke-dasharray:5 4;filter:none!important}
-.bp .lit *{stroke:#081020;stroke-width:2;stroke-linejoin:round}
-.bp .lit .ln{fill:none}
-.bp .f-light{fill:#e2e8f0}.bp .f-panel{fill:#94a3b8}.bp .f-dark{fill:#1e293b}.bp .f-mid{fill:#64748b}
-.bp .f-amber{fill:#fbbf24}.bp .f-visor{fill:#22d3ee}.bp .f-white{fill:#ffffff}.bp .f-ink{fill:#0f172a}
-.bp .f-pink{fill:#f9a8d4}.bp .f-pinkdark{fill:#f472b6}.bp .f-gill{fill:#db2777}.bp .f-blush{fill:#fb7185}
-.bp .lit .ln.s-ink{stroke:#0f172a;stroke-width:3;stroke-linecap:round}
-.bp .lit .ln.s-pink{stroke:#ec4899;stroke-width:2.5;stroke-linecap:round}
-.bp .lit .ln.s-mid{stroke:#64748b;stroke-width:3;stroke-linecap:round}
-.bp .arrive{animation:arrive 1s cubic-bezier(.2,.9,.3,1.25) both;transform-box:fill-box;transform-origin:50% 100%}
-@keyframes arrive{0%{opacity:0;transform:translateY(-18px) scale(.85);filter:drop-shadow(0 0 0 rgba(34,211,238,0))}60%{opacity:1;filter:drop-shadow(0 0 10px rgba(34,211,238,.9))}100%{opacity:1;transform:none;filter:drop-shadow(0 0 0 rgba(34,211,238,0))}}
-
-/* Blueprint picker in goal form */
-.bp-pick{border:0;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.bp-pick legend{font-size:13px;color:var(--dim);margin-bottom:8px;padding:0}
-.bp-tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border:2px solid var(--line-strong);border-radius:8px;cursor:pointer;font:600 14px var(--font-display);color:var(--text);min-height:52px}
-.bp-tile svg{width:100%;max-width:120px;aspect-ratio:1/1}
-.bp-tile input{position:absolute;opacity:0;pointer-events:none}
-.bp-tile:has(input:checked){border-color:var(--amber);background:var(--amber-wash);color:var(--amber)}
-.bp-tile:has(input:focus-visible){outline:3px solid var(--amber);outline-offset:2px}
-
-/* ---------- Forms ---------- */
-.form-grid{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
-.form-grid .full{grid-column:1/-1}
-label.field{display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--dim)}
-.field input,.field select,.field textarea{width:100%;min-height:52px;padding:12px 14px;border:2px solid var(--line-strong);border-radius:6px;background:var(--panel-deep);color:var(--head);font-size:16px}
-.field textarea{min-height:84px;resize:vertical}
-.field input::placeholder,.field textarea::placeholder{color:#5b6b82}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--cyan);outline:none;box-shadow:0 0 0 3px rgba(56,189,248,.2)}
-.hint{font-size:12px;color:var(--dim)}
-
-/* ---------- Tables ---------- */
-.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
-thead th{background:rgba(56,189,248,.12);color:var(--cyan);text-align:left;font:600 13px var(--font-display);letter-spacing:.03em;padding:12px 14px;white-space:nowrap;border-bottom:1px solid var(--line-strong)}
-tbody td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:middle}
-tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
-td.num,th.num{text-align:right;white-space:nowrap}
-
-/* ---------- Rate ---------- */
-.rate{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.rate-figure{font:700 28px var(--font-display);color:var(--head)}
-.rate-figure .eq{color:var(--cyan);margin:0 8px}
-.rate-figure .c{color:var(--amber)}
-.rate p{font-size:13px;color:var(--dim)}
-
-/* ---------- Commander team cards ---------- */
-.member-card .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-.mini-stats div{font-size:11px;color:var(--dim)}
-.mini-stats strong{display:block;font:700 18px var(--font-display);color:var(--head)}
-
-/* ---------- Modal and toast ---------- */
-.modal{position:fixed;inset:0;background:rgba(2,6,18,.72);display:grid;place-items:center;padding:20px;z-index:50;backdrop-filter:blur(3px)}
-.modal[hidden]{display:none}
-.modal-card{background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--r);width:100%;max-width:540px;max-height:calc(100vh - 40px);overflow:auto;padding:26px;box-shadow:0 0 40px rgba(56,189,248,.18)}
-.modal-card h2{font-size:20px;margin-bottom:12px}
-.modal-body{display:grid;gap:14px;font-size:15px}
-.modal-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:24px;flex-wrap:wrap}
-.modal-actions .btn{min-width:130px}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--panel);border:1px solid var(--cyan);color:var(--head);padding:16px 24px;border-radius:6px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60;max-width:calc(100% - 32px);text-align:center;box-shadow:0 0 24px rgba(56,189,248,.35)}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-
-/* ---------- Responsive ---------- */
-@media (max-width:1000px){
-  .profile-inner{grid-template-columns:1fr auto}
-  .profile-inner .stats{grid-column:1/-1}
-}
-@media (max-width:900px){
-  .grid-2{grid-template-columns:1fr}
-  .bay{grid-template-columns:minmax(220px,280px) minmax(0,1fr)}
-}
-@media (max-width:700px){
-  .bay{grid-template-columns:1fr}
-  .bay-visual{max-width:340px;width:100%;margin:0 auto}
-  .stages{grid-template-columns:1fr}
-}
-@media (max-width:640px){
-  .topbar{padding:12px 16px}
-  .topbar h1{font-size:19px}
-  .who{width:100%;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
-  .who-label{display:none}
-  .person{flex:none}
-  .profile-inner{grid-template-columns:1fr;padding:16px}
-  main{padding:16px 16px 44px}
-  .panel{padding:16px}
-  .form-grid{grid-template-columns:1fr}
-  .row{grid-template-columns:1fr}
-  .row-actions{justify-content:flex-start}
-  .tickets{grid-template-columns:1fr}
-  .ticket{grid-template-columns:84px minmax(0,1fr)}
-  .goal-stats{grid-template-columns:1fr 1fr 1fr;gap:8px}
-}
-@media (prefers-reduced-motion:reduce){
-  *{transition:none!important;animation:none!important}
-}
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+<style type="text/tailwindcss">
+  .panel { @apply rounded-2xl border border-cyan-500/20 bg-slate-800/70 backdrop-blur-sm shadow-[inset_0_0_30px_rgba(6,182,212,.06)]; }
+  .panel-title { @apply font-display text-lg font-semibold tracking-wide text-cyan-200; }
+  .label { @apply text-xs text-slate-400; }
+  .btn { @apply inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-lg border px-3 py-1.5 font-display text-xs font-semibold tracking-wider transition; }
+  .btn-cyan { @apply border-cyan-500/60 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/25 hover:shadow-[0_0_14px_rgba(6,182,212,.35)]; }
+  .btn-amber { @apply border-amber-500/60 bg-amber-500/10 text-amber-200 hover:bg-amber-500/25 hover:shadow-[0_0_14px_rgba(245,158,11,.35)]; }
+  .btn-red { @apply border-rose-500/50 bg-rose-500/10 text-rose-200 hover:bg-rose-500/20; }
+  .btn-ghost { @apply border-slate-600 bg-slate-900/40 text-slate-300 hover:border-cyan-500/50 hover:text-cyan-200; }
+  .field { @apply rounded-lg border border-slate-600 bg-[#0b0f19]/80 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/60; }
+  .row { @apply flex flex-wrap items-center gap-3 rounded-xl border border-slate-700/60 bg-slate-900/55 p-3; }
+  .chip { @apply inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium; }
+  .chip-cyan { @apply border-cyan-500/40 bg-cyan-500/10 text-cyan-200; }
+  .chip-amber { @apply border-amber-500/50 bg-amber-500/10 text-amber-200; }
+  .chip-slate { @apply border-slate-500/50 bg-slate-700/40 text-slate-300; }
+  .chip-green { @apply border-emerald-500/40 bg-emerald-500/10 text-emerald-200; }
+  .credit { @apply font-display text-sm font-bold text-amber-400; }
+  .empty { @apply rounded-xl border border-dashed border-slate-700 p-4 text-center text-sm text-slate-500; }
+  .icon-btn { @apply grid h-7 w-7 place-items-center rounded-md border border-slate-700 text-slate-400 hover:border-rose-500/60 hover:text-rose-300; }
+  .bar { @apply h-2 w-full overflow-hidden rounded-full bg-slate-900/80 ring-1 ring-slate-700; }
+  .bar > span { @apply block h-full rounded-full bg-gradient-to-r from-cyan-500 to-amber-400 transition-all duration-700; }
+  .dir-item { @apply flex w-full items-center gap-3 rounded-xl border border-slate-700/70 bg-slate-900/50 p-3 text-left transition hover:border-cyan-500/60; }
+  .dir-item .box { @apply grid h-6 w-6 shrink-0 place-items-center rounded-md border-2 border-cyan-500/60 text-sm font-bold; }
+  .dir-item.pending { @apply border-amber-500/50 bg-amber-500/5; }
+  .dir-item.pending .box { @apply border-amber-400 text-amber-300; }
+  .dir-item.approved { @apply cursor-default border-cyan-500/50 bg-cyan-500/10; }
+  .dir-item.approved .box { @apply border-cyan-400 bg-cyan-500 text-slate-950; }
+  .switch-btn { @apply flex shrink-0 items-center gap-2 rounded-lg border px-3 py-2 text-left transition; }
+  .switch-btn[aria-current="true"] { @apply border-cyan-400 bg-cyan-500/15 shadow-[0_0_16px_rgba(6,182,212,.3)]; }
+  .switch-btn:not([aria-current="true"]) { @apply border-slate-700 bg-slate-900/50 hover:border-cyan-500/50; }
+  .subhead { @apply mb-2 mt-5 font-display text-sm font-semibold text-slate-200 first:mt-0; }
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <svg class="sigil" viewBox="0 0 44 44" aria-hidden="true">
-      <circle cx="22" cy="22" r="19" fill="none" stroke="#38bdf8" stroke-width="2" opacity=".5"/>
-      <circle cx="22" cy="22" r="13" fill="none" stroke="#38bdf8" stroke-width="2.4"/>
-      <path d="M22 3v6M22 35v6M3 22h6M35 22h6" stroke="#38bdf8" stroke-width="2"/>
-      <circle cx="22" cy="22" r="4.5" fill="#fbbf24"/>
-    </svg>
-    <div>
-      <h1>Galactic Ops Terminal<span class="rev">Rev 2</span></h1>
-      <p class="date" id="todayLabel"></p>
+<header class="sticky top-0 z-30 border-b border-cyan-500/20 bg-[#0b0f19]/85 backdrop-blur">
+  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+    <div class="flex items-center gap-3">
+      <svg viewBox="0 0 48 48" class="h-10 w-10 shrink-0" aria-hidden="true">
+        <circle cx="24" cy="24" r="21" fill="none" stroke="#06b6d4" stroke-width="2" opacity=".7"/>
+        <circle cx="24" cy="24" r="14" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <path d="M24 6 L27 21 L42 24 L27 27 L24 42 L21 27 L6 24 L21 21 Z" fill="#06b6d4"/>
+        <circle cx="24" cy="24" r="3" fill="#0b0f19" stroke="#f59e0b" stroke-width="1.5"/>
+      </svg>
+      <div>
+        <h1 class="font-display text-base font-extrabold tracking-[.18em] text-cyan-300 glow-text sm:text-xl">GALACTIC OPERATIONS</h1>
+        <p class="text-xs text-slate-400"><span id="teamName">Task and Credit Tracker</span> <span class="text-slate-600">|</span> <span id="stardate" class="text-amber-300/80"></span></p>
+      </div>
     </div>
+    <nav id="switcher" class="flex max-w-full gap-2 overflow-x-auto pb-1" aria-label="Switch profile"></nav>
   </div>
-  <div class="who" id="userSwitch" role="group" aria-label="Signed in as"></div>
 </header>
 
-<section class="profile" id="profile" aria-live="polite"></section>
+<main id="app" class="mx-auto max-w-7xl px-4 py-6"></main>
 
-<div class="tabs-wrap">
-  <nav class="tabs" id="tabs" role="tablist" aria-label="Sections"></nav>
-</div>
+<footer class="mx-auto max-w-7xl px-4 pb-8 text-xs text-slate-600">
+  All data is stored locally in this browser. Use Export in the Commander's System panel to back up or move devices.
+</footer>
 
-<main id="view"></main>
+<dialog id="missionDialog" aria-labelledby="missionDialogTitle" class="w-[min(36rem,calc(100vw-2rem))] max-h-[85vh] overflow-y-auto rounded-2xl border border-cyan-500/40 bg-[#0f1626] p-0 text-slate-200 shadow-[0_0_40px_rgba(6,182,212,.25)] backdrop:bg-black/70 backdrop:backdrop-blur-sm">
+  <div id="missionDialogBody"></div>
+</dialog>
 
-<div class="modal" id="modal" hidden></div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-<input type="file" id="importFile" accept="application/json,.json" class="sr-only" tabindex="-1" aria-hidden="true">
+<div id="toasts" class="fixed bottom-4 right-4 z-50 flex max-w-sm flex-col gap-2" aria-live="polite"></div>
+<input type="file" id="importFile" accept="application/json,.json" class="hidden">
 
 <script>
-(function () {
+(() => {
   'use strict';
 
-  /* =========================================================
-     Configuration
-     ========================================================= */
-  var STORE_KEY = 'team-task-tracker.v2';   // same key as Rev 1, so existing data carries over
-  var UI_KEY = 'team-task-tracker.ui.v1';
-  var DEFAULT_CREDITS_PER_UNIT = 100;      // 100 credits = 1.00 currency unit
-  var DEFAULT_CURRENCY = '$';
-  var MAX_OPERATIVES = 4;
+  /* ---------- Utilities ---------- */
+  const STORE_KEY = 'galops-tracker-v1';
+  const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+  const pad = n => String(n).padStart(2, '0');
+  const dateKey = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const todayKey = () => dateKey();
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmtDate = k => new Date(k + 'T00:00:00').toLocaleDateString([], { month: 'short', day: 'numeric' });
+  const fmtTs = ts => new Date(ts).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const toInt = (v, min = 0, fallback = 0) => { const n = parseInt(v, 10); return Number.isFinite(n) ? Math.max(min, n) : fallback; };
 
-  /* ---------- Storage with in-memory fallback ---------- */
-  var memoryStore = {};
-  function readKey(k) {
-    try { var raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; }
-    catch (e) { return memoryStore[k] ? JSON.parse(memoryStore[k]) : null; }
-  }
-  function writeKey(k, v) {
-    var s = JSON.stringify(v);
-    try { localStorage.setItem(k, s); } catch (e) { memoryStore[k] = s; }
-  }
-  function save() { writeKey(STORE_KEY, state); }
-  function saveUI() { writeKey(UI_KEY, { user: ui.user, tab: ui.tab }); }
-
-  /* ---------- Helpers ---------- */
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
-  function dateKey(d) {
-    d = d || new Date();
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  }
-  function daysAgo(n, hour) { var d = new Date(); d.setDate(d.getDate() - n); d.setHours(hour || 10, 0, 0, 0); return d; }
-  function nowISO() { return new Date().toISOString(); }
-  function fmtDay(d) { return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
-  function fmtDate(iso) { return fmtDay(new Date(iso)); }
-  function fmtDateTime(iso) {
-    var d = new Date(iso);
-    return fmtDay(d) + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-  }
-  function initials(name) {
-    return String(name || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase();
-  }
-  function num(n) { return Number(n || 0).toLocaleString(); }
-  function money(credits) {
-    var s = state.settings;
-    return s.currency + ((credits || 0) / (s.pointsPerUnit || 1)).toFixed(2);
-  }
-
-  /* =========================================================
-     Blueprints
-     Each part has a stage (1 to 4) and is listed in drawing order.
-     The full set is drawn as a dashed outline; parts light up as
-     the operative's vault reaches 25, 50, 75 and 100 percent.
-     ========================================================= */
-  var BLUEPRINTS = {
+  /* ---------- Avatars (original designs) ---------- */
+  const AVATARS = {
     droid: {
-      label: 'Utility droid',
-      stages: ['Drive treads and base', 'Main chassis', 'Arms and scanner', 'Head and sensor visor'],
-      parts: [
-        // Stage 1: treads and base
-        { s: 1, svg: '<rect class="f-dark" x="50" y="170" width="60" height="40" rx="20"/><rect class="f-dark" x="130" y="170" width="60" height="40" rx="20"/>' +
-          '<circle class="f-mid" cx="68" cy="190" r="10"/><circle class="f-mid" cx="92" cy="190" r="10"/><circle class="f-mid" cx="148" cy="190" r="10"/><circle class="f-mid" cx="172" cy="190" r="10"/>' +
-          '<rect class="f-mid" x="104" y="182" width="32" height="12" rx="4"/>' },
-        // Stage 3 (drawn behind the body): shoulders
-        { s: 3, svg: '<circle class="f-mid" cx="66" cy="120" r="12"/><circle class="f-mid" cx="174" cy="120" r="12"/>' },
-        // Stage 2: chassis
-        { s: 2, svg: '<rect class="f-light" x="68" y="102" width="104" height="74" rx="14"/>' +
-          '<rect class="f-panel" x="82" y="116" width="76" height="42" rx="7"/>' +
-          '<circle class="f-amber" cx="120" cy="137" r="10" filter="url(#FID)"/>' +
-          '<rect class="f-mid" x="84" y="164" width="18" height="6" rx="3"/><rect class="f-mid" x="111" y="164" width="18" height="6" rx="3"/><rect class="f-mid" x="138" y="164" width="18" height="6" rx="3"/>' },
-        // Stage 3: arms, claw and scanner
-        { s: 3, svg: '<rect class="f-light" x="30" y="112" width="34" height="14" rx="7"/><rect class="f-light" x="28" y="112" width="14" height="46" rx="7"/>' +
-          '<path class="f-mid" d="M26 156 h18 l-3 16 h-4 l-2 -9 l-2 9 h-4 z"/>' +
-          '<rect class="f-light" x="176" y="112" width="34" height="14" rx="7"/><rect class="f-light" x="198" y="112" width="14" height="40" rx="7"/>' +
-          '<rect class="f-dark" x="190" y="148" width="30" height="22" rx="4"/><rect class="f-visor" x="195" y="153" width="20" height="12" rx="2" filter="url(#FID)"/>' },
-        // Stage 4: neck, head, visor and antenna
-        { s: 4, svg: '<rect class="f-mid" x="110" y="86" width="20" height="20" rx="3"/>' +
-          '<rect class="f-light" x="80" y="46" width="80" height="44" rx="10"/>' +
-          '<rect class="f-dark" x="90" y="57" width="60" height="20" rx="10"/>' +
-          '<rect class="f-visor" x="95" y="62" width="50" height="10" rx="5" filter="url(#FID)"/>' +
-          '<circle class="f-white" cx="110" cy="67" r="3"/>' +
-          '<path class="ln s-mid" d="M146 46 L156 26"/><circle class="f-amber" cx="157" cy="24" r="6" filter="url(#FID)"/>' }
+      label: 'Utility Droid',
+      stages: ['Core chassis', 'Torso frame', 'Motor arms', 'Scanner head', 'Fully assembled'],
+      parts: () => [
+        // 0: tread chassis
+        `<rect x="92" y="148" width="16" height="24" rx="3" fill="#334155" stroke="#64748b" stroke-width="2"/>
+         <rect x="46" y="168" width="108" height="30" rx="15" fill="#1f2937" stroke="#94a3b8" stroke-width="2"/>
+         <rect x="58" y="163" width="84" height="6" rx="3" fill="#f59e0b"/>
+         <circle cx="64" cy="183" r="9" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+         <circle cx="100" cy="183" r="9" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+         <circle cx="136" cy="183" r="9" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+         <circle cx="64" cy="183" r="3" fill="#06b6d4"/><circle cx="100" cy="183" r="3" fill="#06b6d4"/><circle cx="136" cy="183" r="3" fill="#06b6d4"/>`,
+        // 1: torso
+        `<rect x="58" y="94" width="84" height="58" rx="12" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+         <rect x="66" y="102" width="32" height="22" rx="4" fill="#0f172a"/>
+         <rect x="70" y="106" width="7" height="5" rx="1" fill="#06b6d4" class="blink"/>
+         <rect x="80" y="106" width="7" height="5" rx="1" fill="#f59e0b"/>
+         <rect x="70" y="114" width="17" height="5" rx="1" fill="#22d3ee" opacity=".6"/>
+         <circle cx="121" cy="120" r="11" fill="#f59e0b" stroke="#92400e" stroke-width="2" class="pulse-core"/>
+         <rect x="66" y="132" width="40" height="4" rx="2" fill="#64748b"/>
+         <rect x="66" y="140" width="26" height="4" rx="2" fill="#64748b"/>
+         <rect x="112" y="138" width="22" height="8" rx="2" fill="#475569"/>`,
+        // 2: arms
+        `<circle cx="56" cy="106" r="7" fill="#64748b" stroke="#94a3b8" stroke-width="2"/>
+         <rect x="34" y="101" width="22" height="10" rx="5" fill="#94a3b8"/>
+         <rect x="30" y="101" width="10" height="36" rx="5" fill="#94a3b8"/>
+         <path d="M31 137 L24 148 M39 137 L46 148" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" fill="none"/>
+         <circle cx="144" cy="106" r="7" fill="#64748b" stroke="#94a3b8" stroke-width="2"/>
+         <rect x="144" y="101" width="22" height="10" rx="5" fill="#94a3b8"/>
+         <rect x="160" y="101" width="10" height="36" rx="5" fill="#94a3b8"/>
+         <path d="M161 137 L154 148 M169 137 L176 148" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" fill="none"/>`,
+        // 3: head
+        `<rect x="94" y="86" width="12" height="10" fill="#64748b"/>
+         <rect x="64" y="46" width="72" height="42" rx="14" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+         <rect x="72" y="58" width="56" height="16" rx="8" fill="#0f172a"/>
+         <rect x="76" y="61" width="14" height="10" rx="5" fill="#06b6d4" class="scan"/>
+         <line x1="122" y1="46" x2="132" y2="24" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+         <circle cx="133" cy="21" r="5" fill="#f59e0b" class="blink"/>
+         <rect x="72" y="79" width="22" height="4" rx="2" fill="#94a3b8"/>
+         <circle cx="122" cy="81" r="3" fill="#06b6d4"/>`
       ]
     },
     axolotl: {
-      label: 'Axolotl',
-      stages: ['Body core', 'Tail and fins', 'Legs and feet', 'Gill feathers and smile'],
-      parts: [
-        // Stage 2 (behind body): tail and fin
-        { s: 2, svg: '<path class="f-pinkdark" d="M134 186 C 176 214, 222 196, 220 146 C 204 176, 168 184, 146 168 Z"/>' +
-          '<path class="ln s-pink" d="M156 190 C 184 198, 206 186, 212 164"/>' +
-          '<path class="f-pink" d="M120 116 C 112 106, 128 104, 124 116 Z"/>' },
-        // Stage 4 (behind head): gill feathers
-        { s: 4, svg: '<ellipse class="f-gill" cx="60" cy="62" rx="8" ry="22" transform="rotate(-38 60 62)"/>' +
-          '<ellipse class="f-gill" cx="50" cy="90" rx="8" ry="22" transform="rotate(-80 50 90)"/>' +
-          '<ellipse class="f-gill" cx="58" cy="118" rx="8" ry="22" transform="rotate(-122 58 118)"/>' +
-          '<ellipse class="f-gill" cx="180" cy="62" rx="8" ry="22" transform="rotate(38 180 62)"/>' +
-          '<ellipse class="f-gill" cx="190" cy="90" rx="8" ry="22" transform="rotate(80 190 90)"/>' +
-          '<ellipse class="f-gill" cx="182" cy="118" rx="8" ry="22" transform="rotate(122 182 118)"/>' },
-        // Stage 3 (behind body): back legs
-        { s: 3, svg: '<ellipse class="f-pinkdark" cx="94" cy="202" rx="14" ry="10"/><ellipse class="f-pinkdark" cx="146" cy="202" rx="14" ry="10"/>' +
-          '<circle class="f-pinkdark" cx="84" cy="210" r="4"/><circle class="f-pinkdark" cx="94" cy="212" r="4"/><circle class="f-pinkdark" cx="104" cy="210" r="4"/>' +
-          '<circle class="f-pinkdark" cx="136" cy="210" r="4"/><circle class="f-pinkdark" cx="146" cy="212" r="4"/><circle class="f-pinkdark" cx="156" cy="210" r="4"/>' },
-        // Stage 1: body and head
-        { s: 1, svg: '<ellipse class="f-pink" cx="120" cy="160" rx="42" ry="46"/><ellipse class="f-pink" cx="120" cy="94" rx="60" ry="44"/>' },
-        // Stage 3: front legs and toes
-        { s: 3, svg: '<ellipse class="f-pinkdark" cx="80" cy="170" rx="10" ry="22" transform="rotate(32 80 170)"/>' +
-          '<ellipse class="f-pinkdark" cx="160" cy="170" rx="10" ry="22" transform="rotate(-32 160 170)"/>' +
-          '<circle class="f-pinkdark" cx="62" cy="184" r="4"/><circle class="f-pinkdark" cx="68" cy="192" r="4"/><circle class="f-pinkdark" cx="76" cy="194" r="4"/>' +
-          '<circle class="f-pinkdark" cx="178" cy="184" r="4"/><circle class="f-pinkdark" cx="172" cy="192" r="4"/><circle class="f-pinkdark" cx="164" cy="194" r="4"/>' },
-        // Stage 4: face
-        { s: 4, svg: '<circle class="f-ink" cx="96" cy="88" r="7"/><circle class="f-ink" cx="144" cy="88" r="7"/>' +
-          '<circle class="f-white" cx="98" cy="85" r="2.4"/><circle class="f-white" cx="146" cy="85" r="2.4"/>' +
-          '<ellipse class="f-blush" cx="84" cy="106" rx="8" ry="4.5"/><ellipse class="f-blush" cx="156" cy="106" rx="8" ry="4.5"/>' +
-          '<path class="ln s-ink" d="M104 108 Q 120 122 136 108"/>' }
+      label: 'Cyber Axolotl',
+      stages: ['Bio-pod base', 'Body frame', 'Limbs and fins', 'Head and gills', 'Fully assembled'],
+      parts: () => [
+        // 0: hover pod
+        `<ellipse cx="100" cy="200" rx="74" ry="11" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+         <path d="M50 194 L60 176 L140 176 L150 194 Z" fill="#334155" stroke="#64748b" stroke-width="2"/>
+         <ellipse cx="100" cy="176" rx="40" ry="5" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+         <circle cx="76" cy="186" r="3" fill="#06b6d4" class="blink"/>
+         <circle cx="100" cy="186" r="3" fill="#f59e0b"/>
+         <circle cx="124" cy="186" r="3" fill="#06b6d4" class="blink"/>`,
+        // 1: body + tail
+        `<path d="M140 136 C164 130 178 112 192 96 C188 124 172 150 140 158 Z" fill="#f9a8d4" stroke="#db2777" stroke-width="2"/>
+         <ellipse cx="108" cy="148" rx="46" ry="23" fill="#f9a8d4" stroke="#db2777" stroke-width="2"/>
+         <ellipse cx="104" cy="157" rx="30" ry="9" fill="#fbcfe8"/>
+         <path d="M86 138 h16 v8 h18" stroke="#06b6d4" stroke-width="2" fill="none"/>
+         <circle cx="122" cy="146" r="3" fill="#06b6d4" class="blink"/>
+         <path d="M148 140 l10 -4" stroke="#06b6d4" stroke-width="2" fill="none"/>`,
+        // 2: legs + fins
+        `<rect x="76" y="160" width="10" height="18" rx="5" fill="#f472b6" stroke="#db2777" stroke-width="2"/>
+         <rect x="94" y="164" width="10" height="14" rx="5" fill="#f472b6" stroke="#db2777" stroke-width="2"/>
+         <rect x="120" y="162" width="10" height="16" rx="5" fill="#f472b6" stroke="#db2777" stroke-width="2"/>
+         <rect x="136" y="156" width="10" height="20" rx="5" fill="#f472b6" stroke="#db2777" stroke-width="2"/>
+         <path d="M150 128 C168 118 180 102 192 90 C192 104 182 122 164 134 Z" fill="#22d3ee" fill-opacity=".85" stroke="#06b6d4" stroke-width="2"/>
+         <path d="M92 128 C102 114 120 114 132 128" fill="#22d3ee" fill-opacity=".85" stroke="#06b6d4" stroke-width="2"/>`,
+        // 3: head + gills
+        `<g stroke="#f59e0b" stroke-width="4" stroke-linecap="round" fill="none">
+           <path d="M42 112 C34 102 30 94 26 84"/><path d="M38 122 C28 118 20 114 12 110"/><path d="M40 134 C30 136 22 140 14 146"/>
+           <path d="M82 112 C90 102 94 94 98 84"/><path d="M86 122 C96 118 104 114 110 108"/>
+         </g>
+         <circle cx="26" cy="84" r="3" fill="#06b6d4"/><circle cx="12" cy="110" r="3" fill="#06b6d4"/><circle cx="14" cy="146" r="3" fill="#06b6d4"/>
+         <circle cx="98" cy="84" r="3" fill="#06b6d4"/><circle cx="110" cy="108" r="3" fill="#06b6d4"/>
+         <ellipse cx="62" cy="130" rx="30" ry="24" fill="#f9a8d4" stroke="#db2777" stroke-width="2"/>
+         <circle cx="51" cy="124" r="5" fill="#0f172a"/><circle cx="52.6" cy="122.4" r="1.7" fill="#fff"/>
+         <circle cx="73" cy="124" r="5" fill="#0f172a"/><circle cx="74.6" cy="122.4" r="1.7" fill="#fff"/>
+         <path d="M53 138 Q62 145 71 138" stroke="#9d174d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+         <circle cx="62" cy="110" r="3.5" fill="#06b6d4" class="blink"/>
+         <ellipse cx="44" cy="134" rx="4" ry="2.5" fill="#f472b6"/><ellipse cx="80" cy="134" rx="4" ry="2.5" fill="#f472b6"/>`
       ]
     }
   };
 
-  function stageFor(pct) { return pct >= 100 ? 4 : pct >= 75 ? 3 : pct >= 50 ? 2 : pct >= 25 ? 1 : 0; }
+  const sparkles = () => [[30, 40, 0], [170, 50, .5], [24, 160, 1], [178, 150, .3], [100, 18, .8], [150, 196, 1.2]]
+    .map(([x, y, d]) => `<path class="twinkle" style="animation-delay:${d}s" d="M${x} ${y - 7} L${x + 2} ${y - 2} L${x + 7} ${y} L${x + 2} ${y + 2} L${x} ${y + 7} L${x - 2} ${y + 2} L${x - 7} ${y} L${x - 2} ${y - 2} Z" fill="#fde68a"/>`).join('');
 
-  function blueprintSVG(type, stage, arriving, label) {
-    var bp = BLUEPRINTS[type] || BLUEPRINTS.droid;
-    var id = 'bp' + uid();
-    arriving = arriving || [];
-    var ghost = bp.parts.map(function (p) { return p.svg; }).join('');
-    var lit = bp.parts.filter(function (p) { return p.s <= stage; }).map(function (p) {
-      var i = arriving.indexOf(p.s);
-      return '<g' + (i > -1 ? ' class="arrive" style="animation-delay:' + (i * 0.55).toFixed(2) + 's"' : '') + '>' + p.svg + '</g>';
+  function avatarSVG(type, pct, { sfx = 'a', newPart = -1, cls = '' } = {}) {
+    const av = AVATARS[type] || AVATARS.droid;
+    const complete = pct >= 100;
+    const parts = av.parts().map((p, i) => {
+      const on = complete || pct >= i * 25;
+      return `<g class="${on ? 'part-on' : 'part-locked'} ${i === newPart ? 'part-new' : ''}">${p}</g>`;
     }).join('');
-    var svg = '<svg class="bp" viewBox="0 0 240 240" role="img" aria-label="' + esc(label || bp.label + ' blueprint, stage ' + stage + ' of 4') + '">' +
-      '<defs><pattern id="' + id + 'g" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="rgba(56,189,248,.10)" stroke-width="1"/></pattern>' +
-      '<filter id="' + id + 'f" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
-      '<rect width="240" height="240" fill="url(#' + id + 'g)"/>' +
-      '<g class="ghost">' + ghost + '</g><g class="lit">' + lit + '</g></svg>';
-    return svg.replace(/FID/g, id + 'f');
+    return `<svg viewBox="0 0 200 220" class="${cls}" role="img" aria-label="${av.label}, ${pct}% assembled">
+      <defs>
+        <pattern id="grid-${sfx}" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#06b6d4" stroke-opacity=".12"/></pattern>
+        <filter id="glow-${sfx}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="halo-${sfx}"><stop offset="0" stop-color="#06b6d4" stop-opacity=".45"/><stop offset=".6" stop-color="#f59e0b" stop-opacity=".12"/><stop offset="1" stop-color="#06b6d4" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="200" height="220" fill="url(#grid-${sfx})"/>
+      ${complete ? `<circle cx="100" cy="125" r="96" fill="url(#halo-${sfx})" class="halo"/>` : ''}
+      <g class="${complete ? 'victory' : ''}" ${complete ? `filter="url(#glow-${sfx})"` : ''}>${parts}</g>
+      ${complete ? sparkles() : ''}
+    </svg>`;
   }
 
-  /* =========================================================
-     Sample data
-     ========================================================= */
-  function seedData() {
-    var s = {
-      version: 3,
-      settings: { pointsPerUnit: DEFAULT_CREDITS_PER_UNIT, currency: DEFAULT_CURRENCY, teamName: 'Operations squadron' },
-      users: [
-        { id: 'mgr', name: 'Morgan Hayes', role: 'manager' },
-        { id: 'u1', name: 'Alex Rivera', role: 'member' },
-        { id: 'u2', name: 'Sam Patel', role: 'member' }
+  /* ---------- State ---------- */
+  function defaultState() {
+    const now = Date.now();
+    return {
+      version: 1,
+      view: 'cmd',
+      commander: { name: 'Commander' },
+      settings: { teamName: 'Task and Credit Tracker', currency: '', pointsPerUnit: 0 },
+      operatives: [
+        { id: 'op1', name: 'Operative Kael', callsign: 'ALPHA-1', credits: 0, directives: [], log: {}, goal: { avatar: 'droid', name: 'Utility Droid', target: 150 }, celebrated: false, lastUnlocked: null },
+        { id: 'op2', name: 'Operative Nyra', callsign: 'BRAVO-2', credits: 0, directives: [], log: {}, goal: { avatar: 'axolotl', name: 'Cyber Axolotl', target: 200 }, celebrated: false, lastUnlocked: null },
+        { id: 'op3', name: 'Operative Dax', callsign: 'CHARLIE-3', credits: 0, directives: [], log: {}, goal: { avatar: 'droid', name: 'Utility Droid', target: 250 }, celebrated: false, lastUnlocked: null }
       ],
-      tasks: [], ledger: [], decisions: [], goals: {}
+      missions: [
+        { id: uid(), title: 'Restock the supply bay', details: 'Break room supplies and printer paper.', credits: 15, status: 'open', assignee: null, createdAt: now },
+        { id: uid(), title: 'Archive old holo-records', details: 'Move closed project files into the archive folder.', credits: 25, status: 'open', assignee: null, createdAt: now },
+        { id: uid(), title: 'Recon report on client feedback', details: 'One-page summary of themes from last week.', credits: 30, status: 'open', assignee: null, createdAt: now },
+        { id: uid(), title: 'Run diagnostics on the shared printer', details: '', credits: 10, status: 'open', assignee: null, createdAt: now }
+      ],
+      ledger: []
     };
-    function iso(d, h) { return daysAgo(d, h).toISOString(); }
-    function mission(o) { o.id = o.id || uid(); s.tasks.push(o); return o; }
+  }
 
-    mission({ title: 'Refresh the supplier contact list', description: 'Check every supplier on the shared list has a current contact name and email.', category: 'Intel', points: 50, status: 'open', createdAt: iso(0, 8) });
-    mission({ title: 'Write a one-page guide to expense claims', description: 'Plain steps, screenshots where they help, saved to the team site.', category: 'Briefings', points: 100, status: 'open', createdAt: iso(1, 9) });
-    mission({ title: 'Reorganize the supply cupboard', description: 'Label shelves and list anything that needs reordering.', category: 'Logistics', points: 30, status: 'open', createdAt: iso(2, 9) });
-    mission({ title: 'Build a weekly metrics chart', description: 'Add a chart tab to the team tracker showing missions closed per week.', category: 'Intel', points: 150, status: 'open', createdAt: iso(3, 9) });
-    mission({ title: 'Shadow a client call', description: 'Join one client call this week and write up three takeaways for the squadron.', category: 'Training', points: 75, status: 'open', createdAt: iso(4, 9) });
-
-    mission({ title: 'Archive last quarter\'s project folders', description: 'Move closed projects to the archive drive and update the index.', category: 'Logistics', points: 60, status: 'in_progress', assignee: 'u1', claimedAt: iso(3, 14), createdAt: iso(5, 9), note: 'Two folders are still in the live drive. Move them and resubmit.' });
-    mission({ title: 'Tidy shared drive naming', description: 'Apply the naming convention to the top two folder levels.', category: 'Logistics', points: 80, status: 'pending', assignee: 'u2', claimedAt: iso(2, 9), submittedAt: iso(0, 9), createdAt: iso(6, 9) });
-    mission({ title: 'Photograph and log spare equipment', description: 'Add each spare monitor, dock and headset to the asset sheet with a photo.', category: 'Maintenance', points: 45, status: 'open', createdAt: iso(4, 9) });
-    s.decisions.push({ id: uid(), userId: 'u1', kind: 'task', title: 'Archive last quarter\'s project folders', points: 60, decision: 'rejected', note: 'Two folders are still in the live drive. Move them and resubmit.', at: iso(1, 16) });
-
-    [
-      ['u1', 'Create a new starter checklist', 'Briefings', 120, 2],
-      ['u1', 'Proofread the client newsletter', 'Briefings', 90, 4],
-      ['u1', 'Update the visitor sign-in sheet', 'Logistics', 40, 6],
-      ['u2', 'Write a meeting room booking guide', 'Briefings', 100, 5],
-      ['u2', 'Clean up the team distribution lists', 'Intel', 70, 3],
-      ['u2', 'Collate training feedback forms', 'Training', 60, 7]
-    ].forEach(function (d) {
-      var at = iso(d[4], 15);
-      mission({ title: d[1], description: '', category: d[2], points: d[3], status: 'done', assignee: d[0], claimedAt: iso(d[4] + 2, 9), submittedAt: iso(d[4], 11), approvedAt: at, createdAt: iso(d[4] + 3, 9) });
-      s.ledger.push({ id: uid(), userId: d[0], type: 'earn', source: 'task', title: d[1], points: d[3], at: at });
-      s.decisions.push({ id: uid(), userId: d[0], kind: 'task', title: d[1], points: d[3], decision: 'approved', at: at });
+  function migrate(s) {
+    const d = defaultState();
+    s.version = 1;
+    s.view = s.view || 'cmd';
+    s.commander = s.commander || d.commander;
+    s.settings = Object.assign({ teamName: 'Task and Credit Tracker', currency: '', pointsPerUnit: 0 }, s.settings || {});
+    s.missions = Array.isArray(s.missions) ? s.missions : [];
+    s.missions.forEach(m => { m.category = m.category || ''; m.details = m.details || ''; m.repeatable = !!m.repeatable; });
+    s.ledger = Array.isArray(s.ledger) ? s.ledger : [];
+    if (!Array.isArray(s.operatives) || !s.operatives.length) s.operatives = d.operatives;
+    const cutoff = dateKey(new Date(Date.now() - 60 * 864e5));
+    s.operatives.forEach((o, i) => {
+      o.id = o.id || 'op' + (i + 1);
+      o.credits = Number.isFinite(o.credits) ? o.credits : 0;
+      o.directives = Array.isArray(o.directives) ? o.directives : [];
+      o.log = o.log || {};
+      Object.keys(o.log).forEach(k => { if (k < cutoff) delete o.log[k]; });
+      o.goal = Object.assign({ avatar: 'droid', name: 'Utility Droid', target: 150 }, o.goal || {});
+      if (!AVATARS[o.goal.avatar]) o.goal.avatar = 'droid';
+      o.lastUnlocked = o.lastUnlocked ?? null;
     });
-    s.ledger.push({ id: uid(), userId: 'u1', type: 'payout', source: 'payout', title: 'Payout recorded by Commander', points: 100, at: iso(2, 17) });
-
-    // Savings goals: vault balances are u1 150, u2 230
-    s.goals.u1 = { name: 'Droid builder kit', target: 400, blueprint: 'droid', seenStage: 1, setAt: iso(5, 9) };
-    s.goals.u2 = { name: 'Pet axolotl', target: 300, blueprint: 'axolotl', seenStage: 3, setAt: iso(6, 9) };
-
-    s.ledger.sort(function (a, b) { return a.at < b.at ? 1 : -1; });
-    s.decisions.sort(function (a, b) { return a.at < b.at ? 1 : -1; });
+    if (s.view !== 'cmd' && !s.operatives.some(o => o.id === s.view)) s.view = 'cmd';
     return s;
   }
 
-  // Bring older saved data or backups up to the current shape
-  function normalize(d) {
-    delete d.daily; delete d.dailyItems;
-    d.ledger = (d.ledger || []).filter(function (l) { return l.source !== 'daily'; });
-    d.decisions = (d.decisions || []).filter(function (x) { return x.kind !== 'daily'; });
-    d.tasks = d.tasks || [];
-    d.goals = d.goals || {};
-    d.version = 3;
-    return d;
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw) return migrate(JSON.parse(raw));
+    } catch (e) { console.warn('Load failed', e); }
+    return defaultState();
   }
 
-  /* =========================================================
-     State and queries
-     ========================================================= */
-  var state = readKey(STORE_KEY);
-  if (!state || !state.users || !state.tasks) { state = seedData(); save(); }
-  state = normalize(state);
-
-  var savedUI = readKey(UI_KEY) || {};
-  var ui = { user: savedUI.user || 'u1', tab: savedUI.tab || 'dashboard', cat: 'All', ledgerUser: 'all' };
-  var afterRender = null;
-
-  function user(id) { return state.users.find(function (u) { return u.id === id; }); }
-  function operatives() { return state.users.filter(function (u) { return u.role === 'member'; }); }
-  function me() { return user(ui.user) || state.users[0]; }
-  function isCmd() { return me().role === 'manager'; }
-  function nameOf(id) { var u = user(id); return u ? u.name : 'Former operative'; }
-
-  function sumLedger(userId, type) {
-    return state.ledger.filter(function (l) { return l.userId === userId && l.type === type; })
-      .reduce(function (a, l) { return a + l.points; }, 0);
-  }
-  function earned(userId) { return sumLedger(userId, 'earn'); }
-  function paidOut(userId) { return sumLedger(userId, 'payout'); }
-  function balance(userId) { return earned(userId) - paidOut(userId); }
-
-  function goalInfo(userId) {
-    var g = state.goals[userId];
-    if (!g || !(g.target > 0)) return null;
-    var bal = Math.max(0, balance(userId));
-    var pct = Math.min(100, Math.floor(bal / g.target * 100));
-    return { goal: g, bal: bal, pct: pct, stage: stageFor(pct), remaining: Math.max(0, g.target - bal) };
+  let storageWarned = false;
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+    catch (e) { if (!storageWarned) { toast('Browser storage is unavailable, so changes will not persist.', 'warn'); storageWarned = true; } }
   }
 
-  function pendingQueue() {
-    var q = state.tasks.filter(function (t) { return t.status === 'pending'; }).map(function (t) {
-      return { kind: 'task', key: t.id, userId: t.assignee, title: t.title, points: t.points, at: t.submittedAt, category: t.category };
-    });
-    q.sort(function (a, b) { return a.at < b.at ? -1 : 1; });
-    return q;
+  let state = load();
+  const ui = { missionFilter: 'active' };
+
+  const getOp = id => state.operatives.find(o => o.id === id);
+  const getMission = id => state.missions.find(m => m.id === id);
+
+  const sameTitle = (a, b) => String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
+  const openCopyExists = m => state.missions.some(x => x.status === 'open' && sameTitle(x.title, m.title));
+  function repeatMission(m) {
+    state.missions.push({ id: uid(), title: m.title, details: m.details || '', category: m.category || '', credits: m.credits, repeatable: !!m.repeatable, status: 'open', assignee: null, createdAt: Date.now() });
   }
-  function pendingCredits(userId) {
-    return pendingQueue().filter(function (p) { return p.userId === userId; }).reduce(function (a, p) { return a + p.points; }, 0);
-  }
-  function earnedSince(days) {
-    var cutoff = daysAgo(days, 0).toISOString();
-    return state.ledger.filter(function (l) { return l.type === 'earn' && l.at >= cutoff; }).reduce(function (a, l) { return a + l.points; }, 0);
-  }
-  function categories() {
-    var set = {};
-    state.tasks.forEach(function (t) { if (t.category) set[t.category] = true; });
-    return Object.keys(set).sort();
+  function money(cr) {
+    const st = state.settings;
+    return st && st.currency && st.pointsPerUnit > 0 ? `${st.currency}${(cr / st.pointsPerUnit).toFixed(2)}` : '';
   }
 
-  /* =========================================================
-     Rendering
-     ========================================================= */
-  var $ = function (id) { return document.getElementById(id); };
-
-  function render() {
-    if (!user(ui.user)) ui.user = (operatives()[0] || state.users[0]).id;
-    if (ui.tab === 'settings' && !isCmd()) ui.tab = 'dashboard';
-    $('todayLabel').textContent = state.settings.teamName + ', ' + new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-    renderSwitcher();
-    renderProfile();
-    renderTabs();
-    renderView();
-    saveUI();
-  }
-
-  function renderSwitcher() {
-    $('userSwitch').innerHTML = '<span class="who-label">Signed in as</span>' + state.users.map(function (u) {
-      var cmd = u.role === 'manager';
-      return '<button class="person" type="button" aria-pressed="' + (u.id === ui.user) + '" data-action="switchUser" data-id="' + u.id + '">' +
-        '<span class="avatar' + (cmd ? ' cmd' : '') + '" aria-hidden="true">' + esc(initials(u.name)) + '</span>' +
-        '<span>' + esc(u.name.split(' ')[0]) + '<span class="role">' + (cmd ? 'Commander' : 'Operative') + '</span></span></button>';
-    }).join('');
-  }
-
-  function renderProfile() {
-    var u = me();
-    var cmd = u.role === 'manager';
-    var html = '<div class="profile-inner"><div class="identity"><span class="avatar' + (cmd ? ' cmd' : '') + '" aria-hidden="true">' + esc(initials(u.name)) + '</span>' +
-      '<div><h2>' + esc(u.name) + '</h2><p>' + (cmd ? 'Commander and approver' : 'Operative') + '</p></div></div>';
-    if (cmd) {
-      var q = pendingQueue();
-      var owed = operatives().reduce(function (a, m) { return a + balance(m.id); }, 0);
-      html += '<div class="vault"><span class="lbl">Reports awaiting your review</span>' +
-        '<strong class="big">' + q.length + '<small>' + (q.length === 1 ? 'report' : 'reports') + '</small></strong>' +
-        '<span class="equiv">' + num(q.reduce(function (a, p) { return a + p.points; }, 0)) + ' credits on hold</span></div>' +
-        '<dl class="stats"><div><dt>Owed to operatives</dt><dd>' + money(owed) + '</dd></div>' +
-        '<div><dt>Credits earned, last 7 days</dt><dd>' + num(earnedSince(7)) + '</dd></div></dl>';
-    } else {
-      var bal = balance(u.id);
-      html += '<div class="vault"><span class="lbl">Credit Vault</span>' +
-        '<strong class="big">' + num(bal) + '<small>credits</small></strong>' +
-        '<span class="equiv">Worth ' + money(bal) + ' at ' + num(state.settings.pointsPerUnit) + ' credits = ' + esc(state.settings.currency) + '1.00</span></div>' +
-        '<dl class="stats"><div><dt>Earned to date</dt><dd>' + num(earned(u.id)) + '</dd></div>' +
-        '<div><dt>Awaiting review</dt><dd>' + num(pendingCredits(u.id)) + '</dd></div></dl>';
-    }
-    $('profile').innerHTML = html + '</div>';
-  }
-
-  function tabList() {
-    var cmd = isCmd();
-    var t = [
-      ['dashboard', cmd ? 'Command deck' : 'My station'],
-      ['backlog', 'Mission board'],
-      ['approvals', cmd ? 'Approvals' : 'My reports'],
-      ['balances', 'Credit Vault']
-    ];
-    if (cmd) t.push(['settings', 'Settings']);
-    return t;
-  }
-
-  function renderTabs() {
-    var q = pendingQueue();
-    var mine = q.filter(function (p) { return p.userId === ui.user; }).length;
-    $('tabs').innerHTML = tabList().map(function (t) {
-      var badge = '';
-      if (t[0] === 'approvals') {
-        var c = isCmd() ? q.length : mine;
-        if (c) badge = '<span class="count" aria-label="' + c + ' pending">' + c + '</span>';
-      }
-      return '<button class="tab" role="tab" aria-selected="' + (ui.tab === t[0]) + '" data-action="tab" data-tab="' + t[0] + '">' + t[1] + badge + '</button>';
-    }).join('');
-  }
-
-  function renderView() {
-    var v = {
-      dashboard: isCmd() ? viewCommandDeck : viewStation,
-      backlog: isCmd() ? viewCommandBoard : viewOperativeBoard,
-      approvals: isCmd() ? viewApprovals : viewMyReports,
-      balances: isCmd() ? viewCommandVault : viewMyVault,
-      settings: viewSettings
-    }[ui.tab] || viewStation;
-    afterRender = null;
-    $('view').innerHTML = v();
-    if (afterRender) { var fn = afterRender; afterRender = null; fn(); }
-  }
-
-  function emptyState(title, text) {
-    return '<div class="empty"><strong>' + esc(title) + '</strong>' + esc(text) + '</div>';
-  }
-
-  function meterHTML(pct, extraClass) {
-    return '<div class="meter ' + (extraClass || '') + '" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="Goal progress">' +
-      '<div class="meter-fill' + (pct >= 100 ? ' full' : '') + '" style="width:' + pct + '%"></div>' +
-      '<div class="meter-ticks"><span style="left:25%"></span><span style="left:50%"></span><span style="left:75%"></span></div></div>';
-  }
-
-  /* ---------- Goal and Blueprint Bay ---------- */
-  function goalBayHTML(userId) {
-    var info = goalInfo(userId);
-    if (!info) {
-      return '<section class="panel bay" aria-labelledby="bayTitle">' +
-        '<div class="bay-visual"><span class="bay-tag">No blueprint loaded</span>' + blueprintSVG('droid', 0, [], 'Empty blueprint') + '</div>' +
-        '<div><h2 id="bayTitle">Goal and Blueprint Bay</h2>' +
-        '<p class="sub" style="margin:8px 0 18px">Pick something to save your credits toward. It assembles piece by piece at 25, 50, 75 and 100 percent of your goal.</p>' +
-        '<button class="btn accent" data-action="editGoal">Set a goal</button></div></section>';
-    }
-    var g = info.goal, bp = BLUEPRINTS[g.blueprint] || BLUEPRINTS.droid;
-    var seen = Math.min(g.seenStage || 0, 4);
-    var arriving = [];
-    for (var st = seen + 1; st <= info.stage; st++) arriving.push(st);
-    if (info.stage !== seen) {
-      afterRender = function () {
-        g.seenStage = info.stage; save();
-        if (arriving.length) toast(info.stage === 4 ? 'Blueprint complete: ' + g.name + ' is fully assembled!' : 'New component installed: ' + bp.stages[info.stage - 1]);
+  /* Converts a backup from the earlier tracker build (users / tasks / points, schema v3) */
+  const CALLSIGNS = ['ALPHA-1', 'BRAVO-2', 'CHARLIE-3', 'DELTA-4', 'ECHO-5', 'FOXTROT-6'];
+  const isLegacy = d => d && Array.isArray(d.users) && Array.isArray(d.tasks) && !Array.isArray(d.operatives);
+  function convertLegacy(d) {
+    const toMs = v => { const n = typeof v === 'number' ? v : Date.parse(v); return Number.isFinite(n) ? n : Date.now(); };
+    const mgr = d.users.find(u => ['manager', 'admin', 'commander'].includes(String(u.role).toLowerCase()));
+    const members = d.users.filter(u => u !== mgr);
+    const NEG = ['spend', 'redeem', 'redemption', 'deduct', 'deduction', 'penalty', 'withdraw', 'payout'];
+    const label = src => ({ task: 'Mission', directive: 'Directive', daily: 'Directive', bonus: 'Bonus', goal: 'Goal redeemed' }[src] || (src ? src[0].toUpperCase() + src.slice(1) : 'Adjustment'));
+    const ledger = (d.ledger || []).map(l => {
+      let amount = Number(l.points) || 0;
+      if (NEG.includes(String(l.type).toLowerCase()) && amount > 0) amount = -amount;
+      return { id: l.id || uid(), opId: l.userId, amount, reason: l.title ? `${label(l.source)}: ${l.title}` : label(l.source), ts: toMs(l.at) };
+    }).sort((a, b) => b.ts - a.ts);
+    const operatives = members.map((u, i) => {
+      const g = (d.goals || {})[u.id] || {};
+      const avatar = AVATARS[g.blueprint] ? g.blueprint : 'droid';
+      return {
+        id: u.id, name: u.name || `Operative ${i + 1}`, callsign: CALLSIGNS[i] || `OP-${i + 1}`,
+        credits: ledger.filter(l => l.opId === u.id).reduce((a, l) => a + l.amount, 0),
+        directives: [], log: {},
+        goal: { avatar, name: g.name || AVATARS[avatar].label, target: Math.max(1, Number(g.target) || 150) },
+        celebrated: false, lastUnlocked: null
       };
+    });
+    const STAT = { open: 'open', in_progress: 'claimed', claimed: 'claimed', submitted: 'pending', pending: 'pending', review: 'pending', done: 'approved', approved: 'approved', complete: 'approved', completed: 'approved' };
+    const missions = d.tasks.map(t => {
+      let status = STAT[t.status] || 'open';
+      const assignee = status === 'open' ? null : (t.assignee || null);
+      if (!assignee) status = 'open';
+      const m = { id: t.id || uid(), title: t.title || 'Untitled mission', details: t.description || '', category: t.category || '', credits: Math.max(0, Number(t.points) || 0), repeatable: false, status, assignee, createdAt: toMs(t.createdAt) };
+      if (t.claimedAt) m.claimedAt = toMs(t.claimedAt);
+      if (t.submittedAt) m.submittedAt = toMs(t.submittedAt);
+      if (t.approvedAt) m.approvedAt = toMs(t.approvedAt);
+      return m;
+    });
+    const st = d.settings || {};
+    return migrate({
+      version: 1, view: 'cmd',
+      commander: { name: (mgr && mgr.name) || 'Commander' },
+      settings: { teamName: st.teamName || 'Task and Credit Tracker', currency: st.currency || '', pointsPerUnit: Number(st.pointsPerUnit) || 0 },
+      operatives, missions, ledger,
+      archive: { importedAt: Date.now(), sourceVersion: d.version ?? null, original: d }
+    });
+  }
+  window.GalacticOps = { convertLegacy, isLegacy };
+
+  function credit(op, amount, reason) {
+    op.credits += amount;
+    state.ledger.unshift({ id: uid(), opId: op.id, amount, reason, ts: Date.now() });
+    if (state.ledger.length > 600) state.ledger.length = 600;
+  }
+
+  function getQueue() {
+    const items = [];
+    state.missions.filter(m => m.status === 'pending').forEach(m =>
+      items.push({ kind: 'mission', id: m.id, opId: m.assignee, title: m.title, credits: m.credits, ts: m.submittedAt || 0 }));
+    return items.sort((a, b) => a.ts - b.ts);
+  }
+
+  const goalPct = op => op.goal.target > 0 ? Math.min(100, Math.max(0, Math.floor(op.credits / op.goal.target * 100))) : 0;
+  const unlockedCount = pct => pct >= 100 ? 4 : Math.floor(pct / 25) + 1;
+
+  /* ---------- UI helpers ---------- */
+  function toast(msg, tone = 'ok') {
+    const el = document.createElement('div');
+    const border = tone === 'warn' ? 'border-rose-500/60' : tone === 'gold' ? 'border-amber-400/70' : 'border-cyan-500/50';
+    el.className = `panel px-4 py-3 text-sm text-slate-100 ${border}`;
+    el.style.animation = 'toastIn .25s ease-out';
+    el.textContent = msg;
+    document.getElementById('toasts').appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .4s'; }, 3000);
+    setTimeout(() => el.remove(), 3500);
+  }
+
+  function confetti() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const colors = ['#06b6d4', '#f59e0b', '#67e8f9', '#fde68a', '#f9a8d4'];
+    for (let i = 0; i < 70; i++) {
+      const b = document.createElement('span');
+      b.className = 'confetti-bit';
+      b.style.left = Math.random() * 100 + 'vw';
+      b.style.background = colors[i % colors.length];
+      b.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
+      b.style.setProperty('--t', (1.8 + Math.random() * 1.6) + 's');
+      b.style.animationDelay = Math.random() * .4 + 's';
+      document.body.appendChild(b);
+      setTimeout(() => b.remove(), 4200);
     }
-    var done = info.pct >= 100;
-    var stagesHTML = bp.stages.map(function (name, i) {
-      var n = i + 1, on = info.stage >= n;
-      var need = Math.ceil(g.target * n / 4);
-      return '<li class="stage' + (on ? ' on' : '') + '"><b>' + (n * 25) + '%</b><span>' + esc(name) + '</span>' +
-        '<span class="lock">' + (on ? 'Installed' : num(need) + ' cr') + '</span></li>';
+  }
+
+  const panel = (title, sub, inner, extra = '') => `
+    <section class="panel p-5">
+      <div class="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <div><h3 class="panel-title">${title}</h3>${sub ? `<p class="mt-1 text-sm text-slate-400">${sub}</p>` : ''}</div>
+        ${extra}
+      </div>
+      ${inner}
+    </section>`;
+
+  const STATUS = {
+    open: ['Open', 'chip-cyan'],
+    claimed: ['In progress', 'chip-slate'],
+    pending: ['Pending review', 'chip-amber'],
+    approved: ['Complete', 'chip-green']
+  };
+  const chip = s => `<span class="chip ${STATUS[s][1]}">${STATUS[s][0]}</span>`;
+  const bar = pct => `<div class="bar"><span style="width:${pct}%"></span></div>`;
+
+  /* ---------- Mission detail dialog ---------- */
+  function missionDetail(m) {
+    const op = m.assignee ? getOp(m.assignee) : null;
+    const isCmd = state.view === 'cmd';
+    const line = (k, v) => v ? `<li class="flex justify-between gap-3 border-b border-slate-800 py-1.5 last:border-0"><span class="text-slate-400">${k}</span><span class="text-right text-slate-200">${v}</span></li>` : '';
+    let btns = '';
+    if (isCmd) {
+      if (m.status === 'pending') btns += `<button class="btn btn-cyan" data-act="approveMission" data-id="${m.id}">Approve</button><button class="btn btn-red" data-act="rejectMission" data-id="${m.id}">Return</button>`;
+      btns += `<button class="btn btn-amber" data-act="repost" data-id="${m.id}">Repeat on board</button>`;
+      btns += `<button class="btn btn-ghost" data-act="toggleRepeat" data-id="${m.id}">${m.repeatable ? 'Turn off auto-repeat' : 'Turn on auto-repeat'}</button>`;
+    } else if (m.status === 'open') {
+      btns = `<button class="btn btn-cyan" data-act="claim" data-op="${state.view}" data-id="${m.id}">Claim mission</button>`;
+    } else if (m.status === 'claimed' && m.assignee === state.view) {
+      btns = `<button class="btn btn-amber" data-act="submit" data-id="${m.id}">Mark complete</button><button class="btn btn-ghost" data-act="abandon" data-id="${m.id}">Release</button>`;
+    }
+    return `
+      <div class="p-5 sm:p-6">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="mb-2 flex flex-wrap gap-2">${chip(m.status)}${m.category ? `<span class="chip chip-slate">${esc(m.category)}</span>` : ''}${m.repeatable ? '<span class="chip chip-cyan">Auto-repeat</span>' : ''}</div>
+            <h3 id="missionDialogTitle" class="font-display text-xl font-bold text-slate-100">${esc(m.title)}</h3>
+          </div>
+          <button class="icon-btn shrink-0" data-act="closeDialog" aria-label="Close">✕</button>
+        </div>
+        <p class="mt-3 font-display text-2xl font-extrabold text-amber-400 glow-amber">${m.credits} CR <span class="text-sm font-semibold text-amber-300/70">${money(m.credits)}</span></p>
+        <h4 class="subhead">Briefing</h4>
+        <p class="whitespace-pre-line rounded-xl border border-slate-700/60 bg-slate-900/60 p-3 text-sm leading-relaxed text-slate-200">${m.details ? esc(m.details) : 'No briefing notes for this mission.'}</p>
+        ${m.note && m.status === 'claimed' ? `<p class="mt-3 rounded-lg border border-rose-500/40 bg-rose-500/10 p-3 text-sm text-rose-100">Returned by the Commander: ${esc(m.note)}</p>` : ''}
+        <h4 class="subhead">Mission log</h4>
+        <ul class="text-sm">
+          ${line('Posted', m.createdAt && fmtTs(m.createdAt))}
+          ${line('Operative', op && esc(op.name))}
+          ${line('Claimed', m.claimedAt && fmtTs(m.claimedAt))}
+          ${line('Submitted', m.submittedAt && fmtTs(m.submittedAt))}
+          ${line('Approved', m.approvedAt && fmtTs(m.approvedAt))}
+        </ul>
+        ${btns ? `<div class="mt-5 flex flex-wrap gap-2">${btns}</div>` : ''}
+      </div>`;
+  }
+  function openMission(id) {
+    const m = getMission(id); if (!m) return;
+    const dlg = document.getElementById('missionDialog');
+    document.getElementById('missionDialogBody').innerHTML = missionDetail(m);
+    if (!dlg.open) dlg.showModal();
+  }
+  const titleBtn = m => `<button class="text-left text-slate-100 underline decoration-cyan-500/40 decoration-dotted underline-offset-4 hover:text-cyan-200" data-act="details" data-id="${m.id}">${esc(m.title)}</button>`;
+  const detailsBtn = m => `<button class="btn btn-ghost" data-act="details" data-id="${m.id}">Details</button>`;
+
+  /* ---------- Header ---------- */
+  function renderSwitcher() {
+    const qn = getQueue().length;
+    const btn = (id, title, sub, badge = '') => `
+      <button class="switch-btn" data-act="view" data-id="${id}" aria-current="${state.view === id}">
+        <span>
+          <span class="block font-display text-xs font-semibold text-slate-100">${title}</span>
+          <span class="block text-[11px] text-slate-400">${sub}</span>
+        </span>${badge}
+      </button>`;
+    document.getElementById('switcher').innerHTML =
+      btn('cmd', esc(state.commander.name), 'Admin console',
+        qn ? `<span class="grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-amber-500 px-1 text-[11px] font-bold text-slate-950">${qn}</span>` : '') +
+      state.operatives.map(o => btn(o.id, esc(o.name), `<span class="text-amber-300">${o.credits} CR</span>`)).join('');
+  }
+
+  /* ---------- Commander view ---------- */
+  function renderCommander() {
+    const q = getQueue();
+    const open = state.missions.filter(m => m.status === 'open').length;
+    const issued = state.ledger.filter(l => l.amount > 0).reduce((a, l) => a + l.amount, 0);
+    const weekAgo = Date.now() - 7 * 864e5;
+    const doneWeek = state.missions.filter(m => m.status === 'approved' && (m.approvedAt || 0) >= weekAgo).length;
+    const stat = (label, val, amber) => `
+      <div class="panel p-4">
+        <p class="label">${label}</p>
+        <p class="mt-1 font-display text-3xl font-bold ${amber ? 'text-amber-400 glow-amber' : 'text-cyan-300 glow-text'}">${val}</p>
+      </div>`;
+    return `
+      <section class="mb-6">
+        <h2 class="font-display text-2xl font-bold text-slate-100 sm:text-3xl">Command deck</h2>
+        <p class="mt-1 text-slate-400">Review completed work, post missions and manage the Credit Vault.</p>
+      </section>
+      <div class="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        ${stat('Awaiting your review', q.length, true)}
+        ${stat('Open missions', open)}
+        ${stat('Credits issued to date', issued)}
+        ${stat('Completed in the last 7 days', doneWeek, true)}
+      </div>
+      <div class="grid gap-6 lg:grid-cols-3">
+        <div class="space-y-6 lg:col-span-2">${queuePanel(q)}${missionAdminPanel()}${libraryPanel()}</div>
+        <div class="space-y-6">${squadPanel()}${vaultPanel()}${systemPanel()}</div>
+      </div>`;
+  }
+
+  function queuePanel(q) {
+    const items = q.length ? q.map(it => {
+      const op = getOp(it.opId);
+      const isM = it.kind === 'mission';
+      const m = isM ? getMission(it.id) : null;
+      const data = `data-id="${it.id}" data-op="${it.opId}" data-date="${it.date || ''}"`;
+      return `
+        <li class="row">
+          <div class="min-w-0 flex-1">
+            <div class="mb-1 flex flex-wrap items-center gap-2">
+              <span class="chip ${isM ? 'chip-cyan' : 'chip-slate'}">${isM ? 'Mission' : 'Directive'}</span>
+              ${m && m.repeatable ? '<span class="chip chip-cyan">Auto-repeat</span>' : ''}
+              <span class="text-xs text-slate-400">${esc(op ? op.name : 'Unknown operative')}${isM ? '' : `, ${fmtDate(it.date)}`}</span>
+            </div>
+            ${m ? titleBtn(m) : `<p class="text-slate-100">${esc(it.title)}</p>`}
+          </div>
+          <span class="credit">+${it.credits} CR</span>
+          <div class="flex flex-wrap gap-2">
+            <button class="btn btn-cyan" data-act="${isM ? 'approveMission' : 'approveDir'}" ${data}>Approve</button>
+            ${m && !m.repeatable ? `<button class="btn btn-amber" data-act="approveRepeat" ${data}>Approve and repeat</button>` : ''}
+            <button class="btn btn-red" data-act="${isM ? 'rejectMission' : 'rejectDir'}" ${data}>Return</button>
+          </div>
+        </li>`;
+    }).join('') : `<li class="empty">All clear. Nothing is waiting for review.</li>`;
+    return panel('Approval dashboard', 'Credits transfer only after you approve. Tap a mission title to check the briefing.',
+      `<ul class="space-y-2">${items}</ul>`,
+      q.length > 1 ? `<button class="btn btn-amber" data-act="approveAll">Approve all ${q.length}</button>` : '');
+  }
+
+  function missionAdminPanel() {
+    const order = { pending: 0, open: 1, claimed: 2, approved: 3 };
+    const filters = { active: 'Active', open: 'Open', claimed: 'In progress', pending: 'Pending', approved: 'Complete', all: 'All' };
+    let list = state.missions.slice();
+    if (ui.missionFilter === 'active') list = list.filter(m => m.status !== 'approved');
+    else if (ui.missionFilter !== 'all') list = list.filter(m => m.status === ui.missionFilter);
+    list.sort((a, b) => (order[a.status] - order[b.status]) || ((b.approvedAt || b.createdAt) - (a.approvedAt || a.createdAt)));
+
+    const tabs = Object.entries(filters).map(([k, v]) =>
+      `<button class="btn ${ui.missionFilter === k ? 'btn-cyan' : 'btn-ghost'}" data-act="filter" data-id="${k}">${v}</button>`).join('');
+
+    const rows = list.length ? list.map(m => {
+      const op = m.assignee ? getOp(m.assignee) : null;
+      return `
+        <li class="row">
+          <div class="min-w-0 flex-1">
+            <div class="mb-1 flex flex-wrap items-center gap-2">${chip(m.status)}${m.category ? `<span class="chip chip-slate">${esc(m.category)}</span>` : ''}${op ? `<span class="text-xs text-slate-400">${esc(op.name)}</span>` : ''}</div>
+            ${titleBtn(m)}
+            ${m.details ? `<p class="mt-1 line-clamp-2 text-sm text-slate-400">${esc(m.details)}</p>` : ''}
+          </div>
+          <span class="credit">${m.credits} CR</span>
+          <div class="flex flex-wrap gap-2">
+            <button class="btn ${m.repeatable ? 'btn-cyan' : 'btn-ghost'}" data-act="toggleRepeat" data-id="${m.id}" aria-pressed="${m.repeatable}" title="Automatically put a fresh copy on the board each time this is approved">↻ ${m.repeatable ? 'Auto-repeat on' : 'Auto-repeat'}</button>
+            ${m.status === 'approved' ? `<button class="btn btn-amber" data-act="repost" data-id="${m.id}">Repeat</button>` : ''}
+            <button class="icon-btn" data-act="deleteMission" data-id="${m.id}" aria-label="Delete mission" title="Delete mission">✕</button>
+          </div>
+        </li>`;
+    }).join('') : `<li class="empty">No missions in this view. Post one above to fill the board.</li>`;
+
+    return panel('Open mission board', 'Optional extra work Operatives can claim for Credits.', `
+      <form data-form="addMission" class="mb-4 grid gap-2 sm:grid-cols-[1fr_6rem_auto]">
+        <input name="title" required maxlength="120" placeholder="Mission title" class="field" aria-label="Mission title">
+        <input name="credits" type="number" min="1" value="10" required class="field" aria-label="Credit value">
+        <button class="btn btn-amber">Post mission</button>
+        <textarea name="details" rows="2" maxlength="1000" placeholder="Briefing notes (optional)" class="field sm:col-span-3" aria-label="Briefing notes"></textarea>
+        <input name="category" maxlength="40" list="categoryList" placeholder="Category (optional)" class="field sm:col-span-2" aria-label="Category">
+        <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" name="repeatable" class="h-4 w-4 accent-cyan-500"> Auto-repeat</label>
+        <datalist id="categoryList">${[...new Set(state.missions.map(m => m.category).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join('')}</datalist>
+      </form>
+      <div class="mb-3 flex flex-wrap gap-2">${tabs}</div>
+      <ul class="space-y-2">${rows}</ul>`);
+  }
+
+  function libraryPanel() {
+    const map = new Map();
+    state.missions.filter(m => m.status === 'approved')
+      .sort((a, b) => (b.approvedAt || 0) - (a.approvedAt || 0))
+      .forEach(m => {
+        const k = m.title.trim().toLowerCase();
+        if (!map.has(k)) map.set(k, { m, count: 0 });
+        map.get(k).count++;
+      });
+    const items = [...map.values()].sort((a, b) => a.m.title.localeCompare(b.m.title));
+    const rows = items.map(({ m, count }) => {
+      const onBoard = openCopyExists(m);
+      return `
+        <li class="row" data-lib="${esc(m.title.toLowerCase())} ${esc((m.category || '').toLowerCase())}">
+          <div class="min-w-0 flex-1">
+            ${titleBtn(m)}
+            <p class="mt-1 text-xs text-slate-400">${m.category ? esc(m.category) + ', ' : ''}completed ${count} time${count === 1 ? '' : 's'}, last on ${fmtTs(m.approvedAt || m.createdAt)}</p>
+          </div>
+          <span class="credit">${m.credits} CR</span>
+          ${onBoard ? '<span class="chip chip-cyan">On the board</span>' : `<button class="btn btn-amber" data-act="repost" data-id="${m.id}">Add to board</button>`}
+        </li>`;
+    }).join('') || '<li class="empty">Completed missions appear here, ready to put back on the board.</li>';
+    return panel('Repeat a past mission', 'Every completed mission, ready to go back on the board with one tap.', `
+      ${items.length > 5 ? '<input id="libFilter" type="search" placeholder="Filter by name or category" class="field mb-3 w-full" aria-label="Filter past missions">' : ''}
+      <ul id="libList" class="max-h-96 space-y-2 overflow-y-auto pr-1">${rows}</ul>`);
+  }
+
+
+
+  function squadPanel() {
+    const cards = state.operatives.map(o => {
+      const pct = goalPct(o);
+      const active = state.missions.filter(m => m.assignee === o.id && (m.status === 'claimed' || m.status === 'pending')).length;
+      return `
+        <div class="rounded-xl border border-slate-700/60 bg-slate-900/50 p-3">
+          <div class="flex items-center gap-3">
+            <div class="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-cyan-500/20 bg-slate-950/60">${avatarSVG(o.goal.avatar, pct, { sfx: 'm' + o.id, cls: 'h-full w-full' })}</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-baseline justify-between gap-2"><p class="truncate font-display text-sm font-semibold text-slate-100">${esc(o.name)}</p><p class="credit">${o.credits} CR${money(o.credits) ? ` <span class="text-xs font-semibold text-amber-300/70">${money(o.credits)}</span>` : ''}</p></div>
+              <p class="mb-1.5 text-xs text-slate-400">${esc(o.callsign)}, ${active} active mission${active === 1 ? '' : 's'}</p>
+              ${bar(pct)}
+              <p class="mt-1 text-xs text-slate-400">${esc(o.goal.name)}: ${pct}% of ${o.goal.target} CR</p>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-end gap-2">
+            <div class="flex gap-2">
+              ${pct >= 100 ? `<button class="btn btn-amber" data-act="redeem" data-op="${o.id}">Redeem goal</button>` : ''}
+              <button class="btn btn-ghost" data-act="view" data-id="${o.id}">Open</button>
+            </div>
+          </div>
+        </div>`;
     }).join('');
-
-    return '<section class="panel bay" aria-labelledby="bayTitle">' +
-      '<div class="bay-visual"><span class="bay-tag' + (done ? ' done' : '') + '">' + (done ? 'Blueprint complete' : 'Stage ' + info.stage + ' of 4') + '</span>' +
-      blueprintSVG(g.blueprint, info.stage, arriving, g.name + ', ' + bp.label + ' blueprint, ' + info.stage + ' of 4 components installed') + '</div>' +
-      '<div><div class="panel-head" style="margin-bottom:0"><div><h2 id="bayTitle">Goal and Blueprint Bay</h2></div>' +
-      '<button class="btn ghost small" data-action="editGoal">Edit goal</button></div>' +
-      '<p class="goal-name">' + esc(g.name) + '</p>' +
-      meterHTML(info.pct) +
-      '<div class="meter-row"><span>Progress</span><strong>' + info.pct + '%</strong></div>' +
-      '<div class="goal-stats"><div><strong>' + num(info.bal) + '</strong>In your vault</div>' +
-      '<div><strong>' + num(g.target) + '</strong>Goal credits</div>' +
-      '<div><strong>' + num(info.remaining) + '</strong>Credits to go</div></div>' +
-      '<ul class="stages" aria-label="Blueprint components">' + stagesHTML + '</ul>' +
-      (done ? '<p class="note">Goal reached. Ask your Commander to record the payout, then set your next goal.</p>' :
-        '<p class="sub">Next component unlocks at ' + num(Math.ceil(g.target * (info.stage + 1) / 4)) + ' credits.</p>') +
-      '</div></section>';
+    return panel('Squad overview', 'Balances and goal progress for each Operative.', `<div class="space-y-3">${cards}</div>`);
   }
 
-  function miniGoalHTML(userId) {
-    var info = goalInfo(userId);
-    if (!info) return '<div class="mini-goal"><div class="bay-visual">' + blueprintSVG('droid', 0, [], 'No goal set') + '</div><p class="sub">No savings goal set yet.</p></div>';
-    return '<div class="mini-goal"><div class="bay-visual">' + blueprintSVG(info.goal.blueprint, info.stage, [], info.goal.name + ', stage ' + info.stage + ' of 4') + '</div>' +
-      '<div><p class="goal-line">' + esc(info.goal.name) + '</p>' + meterHTML(info.pct) +
-      '<p class="sub" style="margin-top:6px">' + info.pct + '%, ' + num(info.remaining) + ' credits to go</p></div></div>';
+  function vaultPanel() {
+    const rows = state.ledger.slice(0, 40).map(l => {
+      const op = getOp(l.opId);
+      return `
+        <li class="flex items-start justify-between gap-3 border-b border-slate-800 py-2 text-sm last:border-0">
+          <div class="min-w-0"><p class="truncate text-slate-200">${esc(l.reason)}</p><p class="text-xs text-slate-500">${esc(op ? op.name : 'Unknown')}, ${fmtTs(l.ts)}</p></div>
+          <span class="shrink-0 font-display font-bold ${l.amount >= 0 ? 'text-amber-400' : 'text-rose-300'}">${l.amount >= 0 ? '+' : ''}${l.amount}</span>
+        </li>`;
+    }).join('') || `<li class="empty">No transactions yet. Approved work appears here.</li>`;
+    return panel('Credit vault', 'Grant bonuses or make corrections.', `
+      <form data-form="adjust" class="mb-4 grid grid-cols-2 gap-2">
+        <select name="op" class="field col-span-2" aria-label="Operative">${state.operatives.map(o => `<option value="${o.id}">${esc(o.name)} (${o.credits} CR)</option>`).join('')}</select>
+        <input name="amount" type="number" min="1" required placeholder="Amount" class="field" aria-label="Amount">
+        <input name="reason" maxlength="80" placeholder="Reason" class="field" aria-label="Reason">
+        <button name="mode" value="grant" class="btn btn-cyan">Grant</button>
+        <button name="mode" value="deduct" class="btn btn-red">Deduct</button>
+      </form>
+      <ul class="max-h-80 overflow-y-auto pr-1">${rows}</ul>`);
   }
 
-  /* ---------- Operative: My station ---------- */
-  function myMissionsHTML(userId) {
-    var list = state.tasks.filter(function (t) { return t.assignee === userId && (t.status === 'in_progress' || t.status === 'pending'); });
-    if (!list.length) return emptyState('No active missions', 'Accept a mission from the board to start earning credits.') +
-      '<div class="btn-row" style="justify-content:center;margin-top:12px"><button class="btn secondary small" data-action="tab" data-tab="backlog">Open the mission board</button></div>';
-    return '<ul class="rows">' + list.map(function (t) {
-      var actions, chip;
-      if (t.status === 'pending') {
-        chip = '<span class="chip pending">Awaiting review</span>';
-        actions = '<button class="btn ghost small" data-action="withdrawTask" data-id="' + t.id + '">Withdraw report</button>';
-      } else {
-        chip = t.note ? '<span class="chip returned">Returned</span>' : '<span class="chip progress">In progress</span>';
-        actions = '<button class="btn ghost small" data-action="releaseTask" data-id="' + t.id + '">Release</button>' +
-          '<button class="btn small" data-action="submitTask" data-id="' + t.id + '">Report complete</button>';
-      }
-      return '<li class="row"><div><div class="row-title">' + esc(t.title) + '</div>' +
-        '<div class="row-meta">' + chip + '<span class="cr">+' + num(t.points) + ' cr</span><span>' + esc(t.category) + '</span>' +
-        '<span>Accepted ' + fmtDate(t.claimedAt) + '</span></div>' +
-        (t.note && t.status === 'in_progress' ? '<span class="note">Commander note: ' + esc(t.note) + '</span>' : '') +
-        '</div><div class="row-actions">' + actions + '</div></li>';
-    }).join('') + '</ul>';
+  function systemPanel() {
+    return panel('System', 'Names, settings, backups and reset.', `
+      <form data-form="rename" class="space-y-2">
+        <label class="block"><span class="label">Commander display name</span><input name="cmd" value="${esc(state.commander.name)}" maxlength="40" class="field mt-1 w-full"></label>
+        ${state.operatives.map(o => `
+          <div class="grid grid-cols-[1fr_7rem] gap-2">
+            <input name="name-${o.id}" value="${esc(o.name)}" maxlength="40" class="field" aria-label="Operative name">
+            <input name="cs-${o.id}" value="${esc(o.callsign)}" maxlength="14" class="field" aria-label="Callsign">
+          </div>`).join('')}
+        <label class="block"><span class="label">Team name</span><input name="team" value="${esc(state.settings.teamName)}" maxlength="40" class="field mt-1 w-full"></label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="block"><span class="label">Currency symbol</span><input name="currency" value="${esc(state.settings.currency)}" maxlength="3" placeholder="e.g. $" class="field mt-1 w-full"></label>
+          <label class="block"><span class="label">Credits per 1 unit</span><input name="ppu" type="number" min="0" value="${state.settings.pointsPerUnit || ''}" placeholder="e.g. 100" class="field mt-1 w-full"></label>
+        </div>
+        <button class="btn btn-cyan w-full">Save settings</button>
+      </form>
+      ${state.operatives.length < 6 ? '<button class="btn btn-ghost mt-2 w-full" data-act="addOperative">Add an operative</button>' : ''}
+      <div class="mt-4 grid grid-cols-3 gap-2">
+        <button class="btn btn-ghost" data-act="export">Export</button>
+        <button class="btn btn-ghost" data-act="import">Import</button>
+        <button class="btn btn-red" data-act="reset">Reset</button>
+      </div>`);
   }
 
-  function viewStation() {
-    var u = me();
-    var recent = state.ledger.filter(function (l) { return l.userId === u.id; }).slice(0, 5);
-    var openList = state.tasks.filter(function (t) { return t.status === 'open'; })
-      .sort(function (a, b) { return (a.createdAt || '') < (b.createdAt || '') ? 1 : -1; });
-    var fresh = openList.slice(0, 3);
-    return '<div class="stack">' + goalBayHTML(u.id) +
-      '<div class="grid-2">' +
-      '<section class="panel"><div class="panel-head"><div><h2>My active missions</h2>' +
-      '<p class="sub">Missions you have accepted. Report each one complete and your Commander will review it.</p></div></div>' +
-      myMissionsHTML(u.id) + '</section>' +
-      '<div class="stack">' +
-      '<section class="panel"><div class="panel-head"><div><h2>New missions</h2><p class="sub">' + openList.length + ' open on the board.</p></div>' +
-      (openList.length ? '<button class="btn ghost small" data-action="tab" data-tab="backlog">See all</button>' : '') + '</div>' +
-      (fresh.length ? '<ul class="rows">' + fresh.map(function (t) {
-        return '<li class="row"><div><div class="row-title">' + esc(t.title) + '</div><div class="row-meta">' +
-          '<span class="cr">+' + num(t.points) + ' cr</span><span>' + money(t.points) + '</span><span>' + esc(t.category || 'General') + '</span></div></div>' +
-          '<div class="row-actions"><button class="btn small" data-action="claimTask" data-id="' + t.id + '">Accept mission</button></div></li>';
-      }).join('') + '</ul>' : emptyState('No open missions', 'New missions from your Commander will appear here.')) + '</section>' +
-      '<section class="panel"><div class="panel-head"><div><h2>Recent credits</h2></div>' +
-      '<button class="btn ghost small" data-action="tab" data-tab="balances">Full ledger</button></div>' +
-      (recent.length ? ledgerTableHTML(recent, false) : emptyState('No credits yet', 'Approved missions will show up here.')) +
-      '</section></div></div></div>';
+  /* ---------- Operative view ---------- */
+  function renderOperative(op) {
+    const activeN = state.missions.filter(m => m.assignee === op.id && m.status === 'claimed').length;
+    const doneN = state.missions.filter(m => m.assignee === op.id && m.status === 'approved').length;
+    const pendingCr = getQueue().filter(i => i.opId === op.id).reduce((a, i) => a + i.credits, 0);
+    return `
+      <section class="panel mb-6 flex flex-wrap items-center justify-between gap-4 p-5">
+        <div>
+          <p class="label">Operative console, ${esc(op.callsign)}</p>
+          <h2 class="mt-1 font-display text-2xl font-bold text-slate-100 sm:text-3xl">${esc(op.name)}</h2>
+          <p class="mt-1 text-sm text-slate-400"><span class="font-semibold text-amber-300">${doneN}</span> mission${doneN === 1 ? '' : 's'} completed, ${activeN} in progress</p>
+        </div>
+        <div class="text-right">
+          <p class="label">Credit vault balance</p>
+          <p class="font-display text-4xl font-extrabold text-amber-400 glow-amber">${op.credits}<span class="ml-1 text-base text-amber-300/70">CR</span></p>
+          ${money(op.credits) ? `<p class="text-sm text-amber-200/80">Worth ${money(op.credits)}</p>` : ''}
+          <p class="text-xs text-slate-400">${pendingCr ? `${pendingCr} CR awaiting verification` : 'Nothing awaiting verification'}</p>
+        </div>
+      </section>
+      <div class="grid gap-6 lg:grid-cols-5">
+        <div class="space-y-6 lg:col-span-3">${opMissionsPanel(op)}</div>
+        <div class="space-y-6 lg:col-span-2">${blueprintPanel(op)}${opLedgerPanel(op)}</div>
+      </div>`;
   }
 
-  /* ---------- Commander: Command deck ---------- */
-  function viewCommandDeck() {
-    var q = pendingQueue();
-    var cards = operatives().map(function (m) {
-      var mine = state.tasks.filter(function (t) { return t.assignee === m.id; });
-      var active = mine.filter(function (t) { return t.status === 'in_progress'; });
-      var waiting = mine.filter(function (t) { return t.status === 'pending'; });
-      var done = mine.filter(function (t) { return t.status === 'done'; });
-      return '<section class="panel member-card">' +
-        '<div class="who-line"><span class="avatar sm" aria-hidden="true">' + esc(initials(m.name)) + '</span><div><h3>' + esc(m.name) + '</h3>' +
-        '<p class="sub">' + active.length + ' in progress, ' + waiting.length + ' awaiting review</p></div></div>' +
-        '<div class="mini-stats"><div><strong>' + num(balance(m.id)) + '</strong>Vault credits</div>' +
-        '<div><strong>' + done.length + '</strong>Missions done</div>' +
-        '<div><strong>' + money(balance(m.id)) + '</strong>Value</div></div>' +
-        miniGoalHTML(m.id) +
-        (active.length ? '<p class="sub" style="margin-top:12px">On mission: ' + active.map(function (t) { return esc(t.title); }).join(', ') + '</p>' : '') +
-        '</section>';
-    }).join('');
 
-    return '<div class="stack">' +
-      '<section class="panel"><div class="panel-head"><div><h2>Reports awaiting review</h2><p class="sub">Oldest first.</p></div>' +
-      (q.length ? '<button class="btn secondary small" data-action="tab" data-tab="approvals">Open approvals (' + q.length + ')</button>' : '') + '</div>' +
-      (q.length ? queueRowsHTML(q.slice(0, 4)) : emptyState('All clear', 'Completed missions from your operatives will appear here.')) + '</section>' +
-      '<div><h2 class="section-title">Operatives</h2><div class="grid-3">' +
-      (cards || emptyState('No operatives', 'Add operatives in Settings.')) + '</div></div></div>';
-  }
+  function opMissionsPanel(op) {
+    const avail = state.missions.filter(m => m.status === 'open');
+    const mine = state.missions.filter(m => m.assignee === op.id && m.status === 'claimed');
+    const pend = state.missions.filter(m => m.assignee === op.id && m.status === 'pending');
+    const done = state.missions.filter(m => m.assignee === op.id && m.status === 'approved')
+      .sort((a, b) => (b.approvedAt || 0) - (a.approvedAt || 0)).slice(0, 5);
 
-  /* ---------- Mission board ---------- */
-  function ticketHTML(t, mode) {
-    var foot = '';
-    if (mode === 'claim') foot = '<button class="btn small" data-action="claimTask" data-id="' + t.id + '">Accept mission</button>';
-    if (mode === 'manage') foot = '<button class="btn ghost small" data-action="editTask" data-id="' + t.id + '">Edit</button>' +
-      '<button class="btn ghost small" data-action="deleteTask" data-id="' + t.id + '">Delete</button>';
-    return '<article class="ticket"><div class="stub"><span class="stub-cr">' + num(t.points) + '</span><span class="stub-unit">credits</span>' +
-      '<span class="stub-money">' + money(t.points) + '</span></div>' +
-      '<div class="ticket-body"><span class="cat">' + esc(t.category || 'General') + '</span>' +
-      '<h3>' + esc(t.title) + '</h3><p>' + esc(t.description || '') + '</p>' +
-      '<div class="ticket-foot">' + foot + '</div></div></article>';
+    const row = (m, actions) => `
+      <li class="row">
+        <div class="min-w-0 flex-1">
+          ${m.category ? `<span class="chip chip-slate mb-1">${esc(m.category)}</span>` : ''}
+          <div>${titleBtn(m)}</div>
+          ${m.details ? `<p class="mt-1 line-clamp-2 text-sm text-slate-400">${esc(m.details)}</p>` : ''}
+          ${m.note && m.status === 'claimed' ? `<p class="mt-1 text-sm text-rose-200">Returned: ${esc(m.note)}</p>` : ''}
+        </div>
+        <span class="credit">${m.credits} CR</span>
+        <div class="flex flex-wrap gap-2">${detailsBtn(m)}${actions}</div>
+      </li>`;
+
+    return panel('Mission board', 'Claim extra missions to earn Credits. Open any mission to read its full briefing.', `
+      <h4 class="subhead">Your active missions</h4>
+      <ul class="space-y-2">${mine.map(m => row(m, `<button class="btn btn-amber" data-act="submit" data-id="${m.id}">Mark complete</button><button class="btn btn-ghost" data-act="abandon" data-id="${m.id}">Release</button>`)).join('') || '<li class="empty">No active missions. Claim one below.</li>'}</ul>
+      ${pend.length ? `<h4 class="subhead">Pending review</h4><ul class="space-y-2">${pend.map(m => row(m, chip('pending'))).join('')}</ul>` : ''}
+      <h4 class="subhead">Available</h4>
+      <ul class="space-y-2">${avail.map(m => row(m, `<button class="btn btn-cyan" data-act="claim" data-op="${op.id}" data-id="${m.id}">Claim</button>`)).join('') || '<li class="empty">The board is empty. Check back after the Commander posts new missions.</li>'}</ul>
+      ${done.length ? `<h4 class="subhead">Recently completed</h4><ul class="space-y-2">${done.map(m => row(m, chip('approved'))).join('')}</ul>` : ''}`);
   }
 
-  function filtersHTML() {
-    return '<div class="filters" role="group" aria-label="Filter by category">' + ['All'].concat(categories()).map(function (c) {
-      return '<button class="filter" aria-pressed="' + (ui.cat === c) + '" data-action="filterCat" data-cat="' + esc(c) + '">' + esc(c) + '</button>';
-    }).join('') + '</div>';
-  }
-  function openFiltered() {
-    return state.tasks.filter(function (t) { return t.status === 'open' && (ui.cat === 'All' || t.category === ui.cat); });
+  function blueprintPanel(op) {
+    const g = op.goal; const av = AVATARS[g.avatar];
+    const pct = goalPct(op);
+    const unlocked = unlockedCount(pct);
+    const newPart = (op.lastUnlocked != null && unlocked > op.lastUnlocked) ? unlocked - 1 : -1;
+    const stageIdx = pct >= 100 ? 4 : Math.floor(pct / 25);
+    const thresholds = [.25, .5, .75, 1].map(f => Math.ceil(g.target * f));
+    const nextT = thresholds.find(t => op.credits < t);
+    const milestones = av.stages.slice(0, 4).map((name, i) => `
+      <li class="flex items-center gap-2 text-sm ${i < unlocked ? 'text-slate-100' : 'text-slate-500'}">
+        <span class="h-2 w-2 rounded-full ${i < unlocked ? 'bg-cyan-400 shadow-[0_0_6px_#06b6d4]' : 'bg-slate-700'}"></span>
+        ${name}<span class="ml-auto text-xs">${i * 25}%</span>
+      </li>`).join('');
+    const options = Object.entries(AVATARS).map(([k, a]) => `
+      <label class="block cursor-pointer">
+        <input type="radio" name="avatar" value="${k}" ${g.avatar === k ? 'checked' : ''} class="peer sr-only">
+        <span class="block rounded-xl border border-slate-700 p-2 text-center transition peer-checked:border-cyan-400 peer-checked:bg-cyan-500/10 peer-focus-visible:ring-2 peer-focus-visible:ring-amber-400">
+          <span class="mx-auto block h-20 w-20">${avatarSVG(k, 99, { sfx: 'p' + k + op.id, cls: 'h-full w-full' })}</span>
+          <span class="block text-xs text-slate-200">${a.label}</span>
+        </span>
+      </label>`).join('');
+
+    return panel('Blueprint assembly bay', 'Your savings goal builds a companion as Credits come in.', `
+      <div class="relative overflow-hidden rounded-xl border border-cyan-500/30 bg-[#0b0f19]/80">
+        ${avatarSVG(g.avatar, pct, { sfx: 'b' + op.id, newPart, cls: 'mx-auto block h-64 w-full max-w-xs' })}
+        <div class="absolute left-3 top-3 rounded-md bg-slate-900/80 px-2 py-1 font-display text-xs text-cyan-200">${pct}%</div>
+      </div>
+      <div class="mt-4">
+        <div class="mb-1 flex items-baseline justify-between gap-2">
+          <p class="font-display font-semibold text-slate-100">${esc(g.name)}</p>
+          <p class="text-sm text-slate-400"><span class="text-amber-400">${Math.min(op.credits, g.target)}</span> / ${g.target} CR</p>
+        </div>
+        ${bar(pct)}
+        <p class="mt-2 text-sm ${pct >= 100 ? 'text-amber-300' : 'text-slate-400'}">
+          ${pct >= 100 ? 'Assembly complete. Ask the Commander to redeem your goal.'
+            : `Stage: ${av.stages[stageIdx]}. ${nextT - op.credits} CR until the next part.`}
+        </p>
+      </div>
+      <ul class="mt-4 space-y-1.5">${milestones}</ul>
+      <details class="mt-4 rounded-xl border border-slate-700/60 bg-slate-900/40">
+        <summary class="cursor-pointer px-4 py-3 font-display text-sm text-cyan-200">Configure blueprint</summary>
+        <form data-form="goal" data-op="${op.id}" class="space-y-3 px-4 pb-4">
+          <div class="grid grid-cols-2 gap-2">${options}</div>
+          <label class="block"><span class="label">Companion name</span><input name="name" value="${esc(g.name)}" maxlength="40" class="field mt-1 w-full"></label>
+          <label class="block"><span class="label">Target cost (Credits)</span><input name="target" type="number" min="1" value="${g.target}" required class="field mt-1 w-full"></label>
+          <button class="btn btn-cyan w-full">Save blueprint</button>
+        </form>
+      </details>`);
   }
 
-  function viewOperativeBoard() {
-    var open = openFiltered();
-    return '<section class="panel"><div class="panel-head"><div><h2>Mission board</h2>' +
-      '<p class="sub">Directives posted by your Commander. Accept one, complete it, then report it complete for review.</p></div></div>' +
-      filtersHTML() +
-      (open.length ? '<div class="tickets">' + open.map(function (t) { return ticketHTML(t, 'claim'); }).join('') + '</div>'
-        : emptyState('No open missions', ui.cat === 'All' ? 'Check back soon for new directives.' : 'Try another category.')) + '</section>';
+  function opLedgerPanel(op) {
+    const rows = state.ledger.filter(l => l.opId === op.id).slice(0, 15).map(l => `
+      <li class="flex items-start justify-between gap-3 border-b border-slate-800 py-2 text-sm last:border-0">
+        <div class="min-w-0"><p class="truncate text-slate-200">${esc(l.reason)}</p><p class="text-xs text-slate-500">${fmtTs(l.ts)}</p></div>
+        <span class="shrink-0 font-display font-bold ${l.amount >= 0 ? 'text-amber-400' : 'text-rose-300'}">${l.amount >= 0 ? '+' : ''}${l.amount}</span>
+      </li>`).join('') || `<li class="empty">No Credits yet. Claim and complete missions to start earning.</li>`;
+    return panel('Your vault history', '', `<ul>${rows}</ul>`);
   }
 
-  function viewCommandBoard() {
-    var open = openFiltered();
-    var claimed = state.tasks.filter(function (t) { return t.status === 'in_progress' || t.status === 'pending'; });
-    var done = state.tasks.filter(function (t) { return t.status === 'done'; })
-      .sort(function (a, b) { return (a.approvedAt || '') < (b.approvedAt || '') ? 1 : -1; }).slice(0, 10);
-    var catOptions = categories().map(function (c) { return '<option value="' + esc(c) + '">'; }).join('');
-    return '<div class="stack">' +
-      '<section class="panel"><div class="panel-head"><div><h2>Post a new mission</h2><p class="sub">Operatives can accept it straight away.</p></div></div>' +
-      '<form data-form="addTask" class="form-grid" autocomplete="off">' +
-      '<label class="field full">Mission title<input name="title" required maxlength="90" placeholder="For example: Update the client contact sheet"></label>' +
-      '<label class="field full">Briefing<textarea name="description" maxlength="300" placeholder="What mission complete looks like"></textarea></label>' +
-      '<label class="field">Category<input name="category" list="catList" required maxlength="30" placeholder="Logistics"><datalist id="catList">' + catOptions + '</datalist></label>' +
-      '<label class="field">Credit reward<input name="points" type="number" min="1" step="1" required value="50"></label>' +
-      '<div class="full btn-row"><button class="btn" type="submit">Post mission</button></div></form></section>' +
+  /* ---------- Render ---------- */
+  function render() {
+    renderSwitcher();
+    document.getElementById('teamName').textContent = state.settings.teamName || 'Task and Credit Tracker';
+    const app = document.getElementById('app');
+    const op = state.view !== 'cmd' ? getOp(state.view) : null;
+    app.innerHTML = op ? renderOperative(op) : renderCommander();
 
-      '<section class="panel"><div class="panel-head"><div><h2>Open missions</h2><p class="sub">' +
-      state.tasks.filter(function (t) { return t.status === 'open'; }).length + ' available to accept.</p></div></div>' + filtersHTML() +
-      (open.length ? '<div class="tickets">' + open.map(function (t) { return ticketHTML(t, 'manage'); }).join('') + '</div>'
-        : emptyState('No open missions', 'Post one above to give your operatives something to accept.')) + '</section>' +
-
-      '<section class="panel"><div class="panel-head"><div><h2>Missions underway</h2><p class="sub">In progress or awaiting review.</p></div></div>' +
-      (claimed.length ? '<ul class="rows">' + claimed.map(function (t) {
-        return '<li class="row"><div><div class="row-title">' + esc(t.title) + '</div><div class="row-meta">' +
-          (t.status === 'pending' ? '<span class="chip pending">Awaiting review</span>' : '<span class="chip progress">In progress</span>') +
-          '<span class="cr">+' + num(t.points) + ' cr</span><span>' + esc(nameOf(t.assignee)) + '</span><span>Accepted ' + fmtDate(t.claimedAt) + '</span></div></div>' +
-          '<div class="row-actions"><button class="btn ghost small" data-action="returnToBoard" data-id="' + t.id + '">Return to board</button></div></li>';
-      }).join('') + '</ul>' : emptyState('No missions underway', 'Accepted missions will show here.')) + '</section>' +
-
-      (done.length ? '<section class="panel"><div class="panel-head"><div><h2>Recently completed</h2></div></div><ul class="rows">' +
-        done.map(function (t) {
-          return '<li class="row"><div><div class="row-title">' + esc(t.title) + '</div><div class="row-meta"><span class="chip approved">Complete</span>' +
-            '<span class="cr">+' + num(t.points) + ' cr</span><span>' + esc(nameOf(t.assignee)) + '</span><span>Approved ' + fmtDate(t.approvedAt) + '</span></div></div>' +
-            '<div class="row-actions"><button class="btn ghost small" data-action="reopenTask" data-id="' + t.id + '">Repost</button></div></li>';
-        }).join('') + '</ul></section>' : '') + '</div>';
+    if (op) {
+      const pct = goalPct(op);
+      let dirty = false;
+      const unlocked = unlockedCount(pct);
+      if (op.lastUnlocked !== unlocked) { op.lastUnlocked = unlocked; dirty = true; }
+      if (pct >= 100 && !op.celebrated) {
+        op.celebrated = true; dirty = true;
+        confetti(); toast(`${op.goal.name} is fully assembled!`, 'gold');
+      } else if (pct < 100 && op.celebrated) { op.celebrated = false; dirty = true; }
+      if (dirty) save();
+    }
   }
 
-  /* ---------- Approvals ---------- */
-  function queueRowsHTML(list) {
-    return '<ul class="rows">' + list.map(function (p) {
-      return '<li class="row"><div class="who-line"><span class="avatar sm" aria-hidden="true">' + esc(initials(nameOf(p.userId))) + '</span>' +
-        '<div><div class="row-title">' + esc(p.title) + '</div><div class="row-meta"><span>' + esc(nameOf(p.userId)) + '</span><span>' + esc(p.category || 'General') + '</span>' +
-        '<span>Reported ' + fmtDateTime(p.at) + '</span></div></div></div>' +
-        '<div class="row-actions"><span class="cr">+' + num(p.points) + ' cr</span>' +
-        '<button class="btn secondary small" data-action="reject" data-key="' + esc(p.key) + '">Reject</button>' +
-        '<button class="btn small" data-action="approve" data-key="' + esc(p.key) + '">Approve</button></div></li>';
-    }).join('') + '</ul>';
-  }
+  function commit() { save(); render(); }
 
-  function decisionsHTML(list, showName) {
-    if (!list.length) return emptyState('No decisions yet', 'Approved and rejected reports will be logged here.');
-    return '<ul class="rows">' + list.map(function (d) {
-      var ok = d.decision === 'approved';
-      return '<li class="row"><div><div class="row-title">' + esc(d.title) + '</div><div class="row-meta">' +
-        (ok ? '<span class="chip approved">Approved</span>' : '<span class="chip returned">Rejected</span>') +
-        (showName ? '<span>' + esc(nameOf(d.userId)) + '</span>' : '') + '<span>' + fmtDateTime(d.at) + '</span></div>' +
-        (d.note ? '<span class="note">' + esc(d.note) + '</span>' : '') + '</div>' +
-        '<div class="row-actions"><span class="cr' + (ok ? '' : ' neg') + '">' + (ok ? '+' + num(d.points) + ' cr' : '0 cr') + '</span></div></li>';
-    }).join('') + '</ul>';
-  }
-
-  function viewApprovals() {
-    var q = pendingQueue();
-    var recent = state.decisions.slice().sort(function (a, b) { return a.at < b.at ? 1 : -1; }).slice(0, 15);
-    return '<div class="grid-2">' +
-      '<section class="panel"><div class="panel-head"><div><h2>Reports awaiting review</h2>' +
-      '<p class="sub">Approving credits the operative\'s vault immediately and advances their blueprint.</p></div>' +
-      (q.length > 1 ? '<button class="btn accent small" data-action="approveAll">Approve all (' + q.length + ')</button>' : '') + '</div>' +
-      (q.length ? queueRowsHTML(q) : emptyState('All clear', 'Nothing is waiting for review.')) + '</section>' +
-      '<section class="panel"><div class="panel-head"><div><h2>Recent decisions</h2></div></div>' + decisionsHTML(recent, true) + '</section></div>';
-  }
-
-  function viewMyReports() {
-    var mine = pendingQueue().filter(function (p) { return p.userId === ui.user; });
-    var recent = state.decisions.filter(function (d) { return d.userId === ui.user; })
-      .sort(function (a, b) { return a.at < b.at ? 1 : -1; }).slice(0, 15);
-    return '<div class="grid-2">' +
-      '<section class="panel"><div class="panel-head"><div><h2>Awaiting review</h2><p class="sub">Credits land in your vault once your Commander approves.</p></div></div>' +
-      (mine.length ? '<ul class="rows">' + mine.map(function (p) {
-        return '<li class="row"><div><div class="row-title">' + esc(p.title) + '</div><div class="row-meta"><span class="chip pending">Awaiting review</span>' +
-          '<span>Reported ' + fmtDateTime(p.at) + '</span></div></div><div class="row-actions"><span class="cr">+' + num(p.points) + ' cr</span></div></li>';
-      }).join('') + '</ul>' : emptyState('Nothing awaiting review', 'Report an accepted mission complete to send it to your Commander.')) + '</section>' +
-      '<section class="panel"><div class="panel-head"><div><h2>Decisions on my missions</h2></div></div>' + decisionsHTML(recent, false) + '</section></div>';
-  }
-
-  /* ---------- Credit Vault ---------- */
-  function rateHTML() {
-    var s = state.settings, per = 1 / s.pointsPerUnit;
-    return '<section class="panel"><div class="rate"><div class="rate-figure"><span class="c">' + num(s.pointsPerUnit) + ' credits</span><span class="eq">=</span>' + esc(s.currency) + '1.00</div>' +
-      '<p>Exchange rate. 1 credit is worth ' + esc(s.currency) + (per < 0.01 ? per.toFixed(4) : per.toFixed(2)) + '.' + (isCmd() ? ' Change it in Settings.' : '') + '</p></div></section>';
-  }
-
-  function ledgerTableHTML(list, showName) {
-    return '<div class="table-wrap"><table><thead><tr><th>Date</th>' + (showName ? '<th>Operative</th>' : '') +
-      '<th>Entry</th><th>Type</th><th class="num">Credits</th><th class="num">Value</th></tr></thead><tbody>' +
-      list.map(function (l) {
-        var out = l.type === 'payout';
-        return '<tr><td>' + fmtDate(l.at) + '</td>' + (showName ? '<td>' + esc(nameOf(l.userId)) + '</td>' : '') +
-          '<td>' + esc(l.title) + '</td><td>' + (out ? 'Payout' : 'Mission approved') + '</td>' +
-          '<td class="num"><span class="cr' + (out ? ' neg' : '') + '">' + (out ? '-' : '+') + num(l.points) + '</span></td>' +
-          '<td class="num">' + (out ? '-' : '') + money(l.points) + '</td></tr>';
-      }).join('') + '</tbody></table></div>';
-  }
-
-  function viewMyVault() {
-    var u = me();
-    var list = state.ledger.filter(function (l) { return l.userId === u.id; });
-    return '<div class="stack">' + rateHTML() +
-      '<section class="panel"><div class="panel-head"><div><h2>Vault summary</h2></div></div>' +
-      '<div class="table-wrap"><table><thead><tr><th>Earned to date</th><th>Paid out</th><th>In vault</th><th class="num">Vault value</th></tr></thead>' +
-      '<tbody><tr><td>' + num(earned(u.id)) + ' cr</td><td>' + num(paidOut(u.id)) + ' cr</td><td><strong>' + num(balance(u.id)) + ' cr</strong></td>' +
-      '<td class="num"><strong>' + money(balance(u.id)) + '</strong></td></tr></tbody></table></div></section>' +
-      '<section class="panel"><div class="panel-head"><div><h2>Credit ledger</h2><p class="sub">Every approved mission and payout.</p></div></div>' +
-      (list.length ? ledgerTableHTML(list, false) : emptyState('No entries yet', 'Approved missions will be logged here.')) + '</section></div>';
-  }
-
-  function viewCommandVault() {
-    var rows = operatives().map(function (m) {
-      var info = goalInfo(m.id);
-      return '<tr><td><strong>' + esc(m.name) + '</strong></td><td class="num">' + num(earned(m.id)) + '</td><td class="num">' + num(paidOut(m.id)) + '</td>' +
-        '<td class="num"><strong>' + num(balance(m.id)) + '</strong></td><td class="num">' + money(balance(m.id)) + '</td>' +
-        '<td>' + (info ? esc(info.goal.name) + ', ' + info.pct + '%' : '<span class="sub">No goal</span>') + '</td>' +
-        '<td class="num"><button class="btn secondary small" data-action="payout" data-id="' + m.id + '"' + (balance(m.id) > 0 ? '' : ' disabled') + '>Record payout</button></td></tr>';
-    }).join('');
-    var list = state.ledger.filter(function (l) { return ui.ledgerUser === 'all' || l.userId === ui.ledgerUser; });
-    var opts = '<option value="all">All operatives</option>' + operatives().map(function (m) {
-      return '<option value="' + m.id + '"' + (ui.ledgerUser === m.id ? ' selected' : '') + '>' + esc(m.name) + '</option>';
-    }).join('');
-    return '<div class="stack">' + rateHTML() +
-      '<section class="panel"><div class="panel-head"><div><h2>Operative vaults</h2>' +
-      '<p class="sub">Record a payout when credits are exchanged. It is deducted from the vault and the goal progress updates.</p></div></div>' +
-      '<div class="table-wrap"><table><thead><tr><th>Operative</th><th class="num">Earned</th><th class="num">Paid out</th><th class="num">In vault</th><th class="num">Value</th><th>Goal</th>' +
-      '<th class="num"><span class="sr-only">Actions</span></th></tr></thead><tbody>' + rows + '</tbody></table></div></section>' +
-      '<section class="panel"><div class="panel-head"><div><h2>Credit ledger</h2></div>' +
-      '<label class="field" style="min-width:220px"><span class="sr-only">Filter ledger</span><select data-change="ledgerUser">' + opts + '</select></label></div>' +
-      (list.length ? ledgerTableHTML(list, true) : emptyState('No entries', 'Nothing logged for this filter yet.')) + '</section></div>';
-  }
-
-  /* ---------- Settings ---------- */
-  function viewSettings() {
-    var s = state.settings;
-    var team = state.users.map(function (u) {
-      return '<label class="field">' + (u.role === 'manager' ? 'Commander' : 'Operative') +
-        '<input name="name_' + u.id + '" value="' + esc(u.name) + '" required maxlength="40"></label>';
-    }).join('');
-    var ops = operatives();
-    var roster = ops.length ? '<ul class="rows">' + ops.map(function (m) {
-      var info = goalInfo(m.id);
-      return '<li class="row"><div class="who-line"><span class="avatar sm" aria-hidden="true">' + esc(initials(m.name)) + '</span><div>' +
-        '<div class="row-title">' + esc(m.name) + '</div><div class="row-meta"><span>' + num(balance(m.id)) + ' credits in vault</span>' +
-        (info ? '<span>Goal: ' + esc(info.goal.name) + '</span>' : '') + '</div></div></div>' +
-        '<div class="row-actions"><button class="btn ghost small" type="button" data-action="removeOperative" data-id="' + m.id + '">Remove operative</button></div></li>';
-    }).join('') + '</ul>' : emptyState('No operatives', 'Add one below.');
-    var canAdd = ops.length < MAX_OPERATIVES;
-    return '<div class="stack">' +
-      '<section class="panel"><div class="panel-head"><div><h2>Credits and squadron</h2></div></div>' +
-      '<form data-form="settings" class="form-grid" autocomplete="off">' +
-      '<label class="field">Credits per ' + esc(s.currency) + '1.00<input name="rate" type="number" min="1" step="1" value="' + s.pointsPerUnit + '" required>' +
-      '<span class="hint">100 means 1 credit = ' + esc(s.currency) + '0.01. 10 means 1 credit = ' + esc(s.currency) + '0.10.</span></label>' +
-      '<label class="field">Currency symbol<input name="currency" value="' + esc(s.currency) + '" maxlength="3" required></label>' +
-      '<label class="field full">Squadron name<input name="teamName" value="' + esc(s.teamName) + '" maxlength="40" required></label>' + team +
-      '<div class="full btn-row"><button class="btn" type="submit">Save settings</button></div></form></section>' +
-      '<section class="panel"><div class="panel-head"><div><h2>Squadron roster</h2>' +
-      '<p class="sub">' + ops.length + ' of up to ' + MAX_OPERATIVES + ' operatives. Removing an operative returns their active missions to the board; their past ledger entries are kept.</p></div></div>' +
-      roster +
-      (canAdd ? '<form data-form="addOperative" class="form-grid" autocomplete="off" style="margin-top:16px">' +
-        '<label class="field">New operative name<input name="name" required maxlength="40" placeholder="First and last name"></label>' +
-        '<div class="btn-row" style="align-self:end"><button class="btn secondary" type="submit">Add operative</button></div></form>' : '') +
-      '</section>' +
-      '<section class="panel"><div class="panel-head"><div><h2>Data</h2>' +
-      '<p class="sub">Everything, including goals, is saved in this browser only. Export a backup before clearing browser data or moving devices.</p></div></div>' +
-      '<div class="btn-row"><button class="btn secondary" data-action="exportData">Export backup</button>' +
-      '<button class="btn secondary" data-action="importData">Import backup</button>' +
-      '<button class="btn accent" data-action="resetData">Reset and load sample data</button>' +
-      '<button class="btn ghost" data-action="clearData">Start empty</button></div></section></div>';
-  }
-
-  /* =========================================================
-     Modal and toast
-     ========================================================= */
-  var modalHandler = null, lastFocus = null;
-  function openModal(o) {
-    lastFocus = document.activeElement;
-    var m = $('modal');
-    m.innerHTML = '<div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><form id="modalForm" autocomplete="off">' +
-      '<h2 id="modalTitle">' + esc(o.title) + '</h2><div class="modal-body">' + (o.body || '') + '</div>' +
-      '<div class="modal-actions">' + (o.extra || '') + '<button type="button" class="btn ghost" data-action="closeModal">Cancel</button>' +
-      '<button type="submit" class="btn">' + esc(o.confirm || 'Confirm') + '</button></div></form></div>';
-    m.hidden = false;
-    modalHandler = o.onConfirm;
-    var first = m.querySelector('input:not([type="radio"]), textarea, select') || m.querySelector('button[type="submit"]');
-    if (first) first.focus();
-  }
-  function closeModal() {
-    $('modal').hidden = true; $('modal').innerHTML = ''; modalHandler = null;
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-  var toastTimer;
-  function toast(msg) {
-    var t = $('toast');
-    t.textContent = msg; t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { t.classList.remove('show'); }, 3000);
-  }
-  function commit(msg) { save(); render(); if (msg) toast(msg); }
-
-  /* =========================================================
-     Workflow
-     ========================================================= */
-  function findTask(id) { return state.tasks.find(function (x) { return x.id === id; }); }
-  function credit(userId, title, credits) {
-    state.ledger.unshift({ id: uid(), userId: userId, type: 'earn', source: 'task', title: title, points: credits, at: nowISO() });
-  }
-  function logDecision(t, decision, note) {
-    state.decisions.unshift({ id: uid(), userId: t.assignee, kind: 'task', title: t.title, points: t.points, decision: decision, note: note || '', at: nowISO() });
-    if (state.decisions.length > 300) state.decisions.length = 300;
-  }
+  /* ---------- Actions ---------- */
   function approveMission(id) {
-    var t = findTask(id);
-    if (!t || t.status !== 'pending') return false;
-    t.status = 'done'; t.approvedAt = nowISO(); delete t.note;
-    credit(t.assignee, t.title, t.points);
-    logDecision(t, 'approved');
-    return true;
+    const m = getMission(id); if (!m || m.status !== 'pending') return;
+    const op = getOp(m.assignee);
+    m.status = 'approved'; m.approvedAt = Date.now(); m.note = '';
+    if (op) credit(op, m.credits, `Mission: ${m.title}`);
+    if (m.repeatable && !openCopyExists(m)) { repeatMission(m); return true; }
+    return false;
   }
+  const actions = {
+    view: el => { state.view = el.dataset.id; commit(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+    filter: el => { ui.missionFilter = el.dataset.id; render(); },
+    details: el => openMission(el.dataset.id),
+    closeDialog: () => document.getElementById('missionDialog').close(),
 
-  var actions = {
-    tab: function (d) { ui.tab = d.tab; render(); window.scrollTo(0, 0); },
-    filterCat: function (d) { ui.cat = d.cat; renderView(); },
-    closeModal: closeModal,
-    switchUser: function (d) {
-      if (d.id === ui.user) return;
-      ui.user = d.id;
-      if (ui.tab === 'settings' && !isCmd()) ui.tab = 'dashboard';
-      render(); window.scrollTo(0, 0);
-      if (!document.getElementById('toast').classList.contains('show')) toast('Signed in as ' + me().name);
+    claim: el => {
+      const m = getMission(el.dataset.id);
+      if (!m || m.status !== 'open') { toast('That mission is no longer available.', 'warn'); render(); return; }
+      m.status = 'claimed'; m.assignee = el.dataset.op; m.note = ''; m.claimedAt = Date.now();
+      toast(`Mission claimed: ${m.title}`); commit();
     },
-
-    claimTask: function (d) {
-      var t = findTask(d.id);
-      if (!t || t.status !== 'open') return toast('That mission has already been accepted.');
-      t.status = 'in_progress'; t.assignee = ui.user; t.claimedAt = nowISO(); delete t.note;
-      commit('Mission accepted: ' + t.title);
+    submit: el => {
+      const m = getMission(el.dataset.id); if (!m) return;
+      m.status = 'pending'; m.submittedAt = Date.now();
+      toast('Marked complete. Sent to the Commander for review.'); commit();
     },
-    releaseTask: function (d) {
-      var t = findTask(d.id); if (!t) return;
-      t.status = 'open'; delete t.assignee; delete t.claimedAt; delete t.note;
-      commit('Mission released back to the board');
-    },
-    submitTask: function (d) {
-      var t = findTask(d.id); if (!t) return;
-      t.status = 'pending'; t.submittedAt = nowISO();
-      commit('Report sent to your Commander: ' + t.title);
-    },
-    withdrawTask: function (d) {
-      var t = findTask(d.id); if (!t) return;
-      t.status = 'in_progress'; delete t.submittedAt;
-      commit('Report withdrawn');
+    abandon: el => {
+      const m = getMission(el.dataset.id); if (!m) return;
+      m.status = 'open'; m.assignee = null; m.note = ''; delete m.claimedAt;
+      toast('Mission released back to the board.'); commit();
     },
 
-    approve: function (d) {
-      var t = findTask(d.key);
-      if (t && approveMission(d.key)) commit('Approved: +' + num(t.points) + ' credits to ' + nameOf(t.assignee));
-      else render();
+    approveMission: el => {
+      const again = approveMission(el.dataset.id);
+      toast(again ? 'Mission approved. Credits transferred and a fresh copy is back on the board.' : 'Mission approved. Credits transferred.', 'gold'); commit();
     },
-    approveAll: function () {
-      var q = pendingQueue();
-      openModal({
-        title: 'Approve all ' + q.length + ' reports?',
-        body: '<p>This transfers ' + num(q.reduce(function (a, p) { return a + p.points; }, 0)) + ' credits across your operatives\' vaults.</p>',
-        confirm: 'Approve all',
-        onConfirm: function () { var n = 0; q.forEach(function (p) { if (approveMission(p.key)) n++; }); commit('Approved ' + n + ' reports'); }
-      });
+    approveRepeat: el => {
+      const m = getMission(el.dataset.id); if (!m) return;
+      approveMission(m.id);
+      if (!openCopyExists(m)) repeatMission(m);
+      toast('Mission approved and put back on the board.', 'gold'); commit();
     },
-    reject: function (d) {
-      var t = findTask(d.key);
-      if (!t || t.status !== 'pending') return render();
-      openModal({
-        title: 'Reject ' + t.title + '?',
-        body: '<p>' + esc(nameOf(t.assignee)) + ' will see your note and can report it again.</p>' +
-          '<label class="field">Note for ' + esc(nameOf(t.assignee)) + '<textarea name="note" maxlength="200" placeholder="What needs to change"></textarea></label>',
-        confirm: 'Reject',
-        onConfirm: function (f) {
-          var note = f.note.value.trim();
-          t.status = 'in_progress'; t.note = note || 'Returned for more work.'; delete t.submittedAt;
-          logDecision(t, 'rejected', note);
-          commit('Rejected and returned to ' + nameOf(t.assignee));
-        }
-      });
+    toggleRepeat: el => {
+      const m = getMission(el.dataset.id); if (!m) return;
+      m.repeatable = !m.repeatable;
+      state.missions.filter(x => sameTitle(x.title, m.title)).forEach(x => { x.repeatable = m.repeatable; });
+      toast(m.repeatable ? `Auto-repeat on. "${m.title}" returns to the board each time it is approved.` : `Auto-repeat off for "${m.title}".`);
+      commit();
     },
-
-    editTask: function (d) {
-      var t = findTask(d.id); if (!t) return;
-      openModal({
-        title: 'Edit mission',
-        body: '<label class="field">Mission title<input name="title" required maxlength="90" value="' + esc(t.title) + '"></label>' +
-          '<label class="field">Briefing<textarea name="description" maxlength="300">' + esc(t.description || '') + '</textarea></label>' +
-          '<label class="field">Category<input name="category" required maxlength="30" value="' + esc(t.category || '') + '"></label>' +
-          '<label class="field">Credit reward<input name="points" type="number" min="1" step="1" required value="' + t.points + '"></label>',
-        confirm: 'Save changes',
-        onConfirm: function (f) {
-          t.title = f.title.value.trim(); t.description = f.description.value.trim();
-          t.category = f.category.value.trim(); t.points = Math.max(1, parseInt(f.points.value, 10) || 1);
-          commit('Mission updated');
-        }
-      });
+    addOperative: () => {
+      const n = state.operatives.length;
+      state.operatives.push({ id: 'op' + uid(), name: `Operative ${n + 1}`, callsign: CALLSIGNS[n] || `OP-${n + 1}`, credits: 0, directives: [], log: {}, goal: { avatar: 'droid', name: 'Utility Droid', target: 150 }, celebrated: false, lastUnlocked: null });
+      toast('Operative added. Rename them in the System panel.'); commit();
     },
-    deleteTask: function (d) {
-      var t = findTask(d.id); if (!t) return;
-      openModal({
-        title: 'Delete this mission?', body: '<p>' + esc(t.title) + ' will be removed from the board.</p>', confirm: 'Delete mission',
-        onConfirm: function () { state.tasks = state.tasks.filter(function (x) { return x.id !== t.id; }); commit('Mission deleted'); }
-      });
+    rejectMission: el => {
+      const m = getMission(el.dataset.id); if (!m) return;
+      const note = prompt('Reason for returning this mission (optional):', '');
+      if (note === null) return;
+      m.status = 'claimed'; m.note = note.trim() || 'Needs more work.';
+      toast('Mission returned to the Operative.'); commit();
     },
-    returnToBoard: function (d) {
-      var t = findTask(d.id); if (!t) return;
-      openModal({
-        title: 'Return to board?', body: '<p>' + esc(t.title) + ' will be unassigned from ' + esc(nameOf(t.assignee)) + ' and reopened for any operative.</p>',
-        confirm: 'Return to board',
-        onConfirm: function () { t.status = 'open'; delete t.assignee; delete t.claimedAt; delete t.submittedAt; delete t.note; commit('Mission returned to the board'); }
-      });
-    },
-    reopenTask: function (d) {
-      var t = findTask(d.id); if (!t) return;
-      state.tasks.unshift({ id: uid(), title: t.title, description: t.description, category: t.category, points: t.points, status: 'open', createdAt: nowISO() });
-      commit('Mission reposted to the board');
+    approveAll: () => {
+      const q = getQueue();
+      q.forEach(it => approveMission(it.id));
+      toast(`Approved ${q.length} items.`, 'gold'); commit();
     },
 
-    editGoal: function () {
-      var g = state.goals[ui.user] || { name: '', target: 200, blueprint: 'droid' };
-      var tiles = Object.keys(BLUEPRINTS).map(function (k) {
-        return '<label class="bp-tile"><input type="radio" name="bp" value="' + k + '"' + (g.blueprint === k ? ' checked' : '') + '>' +
-          blueprintSVG(k, 4, [], BLUEPRINTS[k].label + ' blueprint') + '<span>' + BLUEPRINTS[k].label + '</span></label>';
-      }).join('');
-      openModal({
-        title: state.goals[ui.user] ? 'Edit your goal' : 'Set a savings goal',
-        body: '<label class="field">What are you saving for?<input name="name" required maxlength="40" value="' + esc(g.name) + '" placeholder="For example: Droid kit or Pet axolotl"></label>' +
-          '<label class="field">Goal in credits<input name="target" type="number" min="1" step="1" required value="' + g.target + '">' +
-          '<span class="hint">At ' + num(state.settings.pointsPerUnit) + ' credits per ' + esc(state.settings.currency) + '1.00.</span></label>' +
-          '<fieldset class="bp-pick"><legend>Blueprint</legend>' + tiles + '</fieldset>',
-        extra: state.goals[ui.user] ? '<button type="button" class="btn ghost" data-action="clearGoal">Remove goal</button>' : '',
-        confirm: 'Save goal',
-        onConfirm: function (f) {
-          var name = f.name.value.trim(), target = parseInt(f.target.value, 10);
-          var picked = f.querySelector('input[name="bp"]:checked');
-          if (!name || !(target > 0)) { toast('Add a goal name and a credit amount.'); return false; }
-          state.goals[ui.user] = { name: name, target: target, blueprint: picked ? picked.value : 'droid', seenStage: 0, setAt: nowISO() };
-          commit('Blueprint loaded: ' + name);
-        }
-      });
+    deleteMission: el => {
+      const m = getMission(el.dataset.id); if (!m) return;
+      if (!confirm(`Delete mission "${m.title}"? Credits already awarded stay in the vault.`)) return;
+      state.missions = state.missions.filter(x => x.id !== m.id);
+      toast('Mission deleted.'); commit();
     },
-    clearGoal: function () {
-      delete state.goals[ui.user];
-      closeModal(); commit('Goal removed');
+    repost: el => {
+      const m = getMission(el.dataset.id); if (!m) return;
+      if (openCopyExists(m) && !confirm(`"${m.title}" is already open on the board. Add another copy?`)) return;
+      repeatMission(m);
+      toast(`"${m.title}" is back on the mission board.`); commit();
+    },
+    redeem: el => {
+      const op = getOp(el.dataset.op); const t = op.goal.target;
+      if (op.credits < t) { toast('Not enough Credits to redeem yet.', 'warn'); return; }
+      if (!confirm(`Redeem ${t} CR from ${op.name} for "${op.goal.name}"?`)) return;
+      credit(op, -t, `Goal redeemed: ${op.goal.name}`);
+      op.celebrated = false; op.lastUnlocked = null;
+      toast(`${op.goal.name} redeemed for ${op.name}.`, 'gold'); commit();
     },
 
-    payout: function (d) {
-      var m = user(d.id), bal = balance(d.id);
-      openModal({
-        title: 'Record payout for ' + m.name,
-        body: '<p>In vault: ' + num(bal) + ' credits (' + money(bal) + ').</p>' +
-          '<label class="field">Credits to pay out<input name="points" type="number" min="1" max="' + bal + '" step="1" value="' + bal + '" required></label>' +
-          '<label class="field">Note (optional)<input name="note" maxlength="80" placeholder="For example: Goal reached, kit bought"></label>',
-        confirm: 'Record payout',
-        onConfirm: function (f) {
-          var c = parseInt(f.points.value, 10);
-          if (!c || c < 1 || c > bal) { toast('Enter between 1 and ' + num(bal) + ' credits.'); return false; }
-          state.ledger.unshift({ id: uid(), userId: m.id, type: 'payout', source: 'payout', title: f.note.value.trim() || 'Payout recorded by Commander', points: c, at: nowISO() });
-          commit('Payout recorded: ' + money(c) + ' to ' + m.name);
-        }
-      });
-    },
-
-    removeOperative: function (d) {
-      var m = user(d.id); if (!m) return;
-      var bal = balance(m.id);
-      openModal({
-        title: 'Remove ' + m.name + '?',
-        body: '<p>' + esc(m.name) + ' will be removed from the squadron and their goal deleted. Any missions they have accepted go back on the board.</p>' +
-          (bal > 0 ? '<p class="note">They still have ' + num(bal) + ' credits (' + money(bal) + ') in their vault. Record a payout first if you owe them.</p>' : ''),
-        confirm: 'Remove operative',
-        onConfirm: function () {
-          state.tasks.forEach(function (t) {
-            if (t.assignee === m.id && (t.status === 'in_progress' || t.status === 'pending')) {
-              t.status = 'open'; delete t.assignee; delete t.claimedAt; delete t.submittedAt; delete t.note;
-            }
-          });
-          delete state.goals[m.id];
-          state.users = state.users.filter(function (u) { return u.id !== m.id; });
-          if (ui.ledgerUser === m.id) ui.ledgerUser = 'all';
-          commit(m.name + ' removed from the squadron');
-        }
-      });
-    },
-
-    exportData: function () {
-      var blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      var a = document.createElement('a');
+    export: () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'galactic-ops-backup-' + dateKey() + '.json';
+      a.download = `galactic-ops-backup-${todayKey()}.json`;
       document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-      toast('Backup exported');
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      toast('Backup exported.');
     },
-    importData: function () { $('importFile').value = ''; $('importFile').click(); },
-    resetData: function () {
-      openModal({
-        title: 'Reset and load sample data?', body: '<p>This replaces all missions, vaults, goals and history in this browser with fresh demo data.</p>',
-        confirm: 'Reset data',
-        onConfirm: function () { state = seedData(); ui.user = 'mgr'; ui.tab = 'dashboard'; ui.cat = 'All'; commit('Sample data loaded'); }
-      });
-    },
-    clearData: function () {
-      openModal({
-        title: 'Start with an empty terminal?', body: '<p>Keeps names and the exchange rate. Removes all missions, reports, vault history and goals.</p>',
-        confirm: 'Clear everything',
-        onConfirm: function () { state.tasks = []; state.ledger = []; state.decisions = []; state.goals = {}; commit('Terminal cleared'); }
-      });
+    import: () => document.getElementById('importFile').click(),
+    reset: () => {
+      if (!confirm('Reset all data? This erases missions, Credits and settings in this browser.')) return;
+      state = defaultState(); ui.missionFilter = 'active';
+      toast('System reset to defaults.'); commit();
     }
   };
 
-  var forms = {
-    addOperative: function (f) {
-      var name = f.name.value.trim();
-      if (!name) return toast('Add a name for the new operative.');
-      if (operatives().length >= MAX_OPERATIVES) return toast('The squadron is full.');
-      state.users.push({ id: 'u' + uid(), name: name, role: 'member' });
-      commit(name + ' added to the squadron');
+  const forms = {
+    addMission: (f, fd) => {
+      const title = fd.get('title').trim(); if (!title) return;
+      state.missions.push({ id: uid(), title, details: (fd.get('details') || '').trim(), category: (fd.get('category') || '').trim(), repeatable: fd.get('repeatable') === 'on', credits: toInt(fd.get('credits'), 1, 10), status: 'open', assignee: null, createdAt: Date.now() });
+      toast('Mission posted to the board.');
     },
-    addTask: function (f) {
-      var title = f.title.value.trim(), cat = f.category.value.trim(), c = parseInt(f.points.value, 10);
-      if (!title || !cat || !(c > 0)) return toast('Add a title, category and credit reward.');
-      state.tasks.unshift({ id: uid(), title: title, description: f.description.value.trim(), category: cat, points: c, status: 'open', createdAt: nowISO() });
-      commit('Mission posted to the board');
+    adjust: (f, fd, submitter) => {
+      const op = getOp(fd.get('op')); const amt = toInt(fd.get('amount'), 1, 0); if (!op || !amt) return;
+      const deduct = submitter && submitter.value === 'deduct';
+      const reason = (fd.get('reason') || '').trim() || (deduct ? 'Commander deduction' : 'Commander bonus');
+      credit(op, deduct ? -amt : amt, reason);
+      toast(`${deduct ? 'Deducted' : 'Granted'} ${amt} CR ${deduct ? 'from' : 'to'} ${op.name}.`, 'gold');
     },
-    settings: function (f) {
-      var rate = parseInt(f.rate.value, 10);
-      if (!(rate > 0)) return toast('Credits per 1.00 must be at least 1.');
-      state.settings.pointsPerUnit = rate;
-      state.settings.currency = f.currency.value.trim() || '$';
-      state.settings.teamName = f.teamName.value.trim() || 'Squadron';
-      state.users.forEach(function (u) { var i = f['name_' + u.id]; if (i && i.value.trim()) u.name = i.value.trim(); });
-      commit('Settings saved');
+    goal: (f, fd) => {
+      const op = getOp(f.dataset.op);
+      const avatar = AVATARS[fd.get('avatar')] ? fd.get('avatar') : op.goal.avatar;
+      let name = (fd.get('name') || '').trim();
+      const wasDefault = Object.values(AVATARS).some(a => a.label === op.goal.name);
+      if (!name || (wasDefault && name === op.goal.name && avatar !== op.goal.avatar)) name = AVATARS[avatar].label;
+      op.goal = { avatar, name, target: toInt(fd.get('target'), 1, op.goal.target) };
+      op.lastUnlocked = null;
+      toast('Blueprint saved.');
+    },
+    rename: (f, fd) => {
+      state.commander.name = (fd.get('cmd') || '').trim() || 'Commander';
+      state.operatives.forEach(o => {
+        o.name = (fd.get('name-' + o.id) || '').trim() || o.name;
+        o.callsign = (fd.get('cs-' + o.id) || '').trim().toUpperCase() || o.callsign;
+      });
+      state.settings.teamName = (fd.get('team') || '').trim() || 'Task and Credit Tracker';
+      state.settings.currency = (fd.get('currency') || '').trim();
+      state.settings.pointsPerUnit = toInt(fd.get('ppu'), 0, 0);
+      toast('Settings saved.');
     }
   };
 
-  /* =========================================================
-     Events
-     ========================================================= */
-  document.addEventListener('click', function (e) {
-    var el = e.target.closest('[data-action]');
-    if (el && !el.disabled && actions[el.dataset.action]) { e.preventDefault(); actions[el.dataset.action](el.dataset, el); return; }
-    if (e.target === $('modal')) closeModal();
-  });
-  document.addEventListener('submit', function (e) {
-    var f = e.target;
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-act]');
+    if (!el || !actions[el.dataset.act]) return;
     e.preventDefault();
-    if (f.id === 'modalForm') {
-      var h = modalHandler;
-      if (h && h(f) === false) return;
-      closeModal(); return;
-    }
-    if (forms[f.dataset.form]) forms[f.dataset.form](f);
+    const dlg = document.getElementById('missionDialog');
+    if (dlg.open && dlg.contains(el) && el.dataset.act !== 'details') dlg.close();
+    actions[el.dataset.act](el);
   });
-  document.addEventListener('change', function (e) {
-    if (e.target.dataset.change === 'ledgerUser') { ui.ledgerUser = e.target.value; renderView(); }
-  });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('modal').hidden) closeModal(); });
 
-  $('importFile').addEventListener('change', function (e) {
-    var file = e.target.files && e.target.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function () {
+  document.getElementById('missionDialog').addEventListener('click', e => {
+    if (e.target.id === 'missionDialog') e.target.close();
+  });
+
+  document.addEventListener('input', e => {
+    if (e.target.id !== 'libFilter') return;
+    const q = e.target.value.trim().toLowerCase();
+    document.querySelectorAll('#libList [data-lib]').forEach(li => { li.hidden = q && !li.dataset.lib.includes(q); });
+  });
+
+  document.addEventListener('submit', e => {
+    const f = e.target.closest('form[data-form]'); if (!f) return;
+    e.preventDefault();
+    const handler = forms[f.dataset.form]; if (!handler) return;
+    handler(f, new FormData(f), e.submitter);
+    commit();
+  });
+
+  document.getElementById('importFile').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
       try {
-        var data = JSON.parse(reader.result);
-        if (!data || !Array.isArray(data.users) || !Array.isArray(data.tasks) || !data.settings) throw new Error('bad file');
-        state = normalize(data); commit('Backup imported');
-      } catch (err) { toast('That file is not a terminal backup. Choose a .json file exported from this app.'); }
+        const data = JSON.parse(reader.result);
+        let next, summary;
+        if (isLegacy(data)) {
+          next = convertLegacy(data);
+          summary = 'Backup from the previous tracker detected. It will be converted as follows:\n\n';
+        } else if (Array.isArray(data.operatives)) {
+          next = migrate(data);
+          summary = 'Restore this backup?\n\n';
+        } else throw new Error('Unrecognised file');
+        summary += next.operatives.map(o => `${o.name}: ${o.credits} CR, goal ${o.goal.target} CR`).join('\n');
+        summary += `\n${next.missions.length} missions, ${next.ledger.length} vault entries.\n\nThis replaces the data currently in this browser. Continue?`;
+        if (!confirm(summary)) { e.target.value = ''; return; }
+        state = next; commit(); toast('Backup imported. All balances restored.', 'gold');
+      } catch (err) { toast('Import failed: this file is not a recognised tracker backup.', 'warn'); }
+      e.target.value = '';
     };
     reader.readAsText(file);
   });
 
-  window.addEventListener('storage', function (e) {
-    if (e.key === STORE_KEY && e.newValue) { state = normalize(JSON.parse(e.newValue)); render(); }
-  });
+  /* ---------- Clock and day rollover ---------- */
+  let lastDay = todayKey();
+  function tick() {
+    const d = new Date();
+    const start = new Date(d.getFullYear(), 0, 0);
+    const doy = Math.floor((d - start) / 864e5);
+    document.getElementById('stardate').textContent =
+      `Stardate ${d.getFullYear()}.${String(doy).padStart(3, '0')}, ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    if (todayKey() !== lastDay) { lastDay = todayKey(); render(); }
+  }
 
   render();
+  tick();
+  setInterval(tick, 30000);
 })();
 </script>
 </body>
