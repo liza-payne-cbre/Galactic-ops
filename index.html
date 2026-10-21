@@ -461,6 +461,31 @@
   const bar = pct => `<div class="bar"><span style="width:${pct}%"></span></div>`;
 
   /* ---------- Mission detail dialog ---------- */
+  function missionEditForm(m) {
+    const cats = [...new Set(state.missions.map(x => x.category).filter(Boolean))];
+    return `
+      <form data-form="editMission" data-id="${m.id}" class="space-y-3 p-5 sm:p-6">
+        <div class="flex items-start justify-between gap-3">
+          <h3 id="missionDialogTitle" class="font-display text-xl font-bold text-slate-100">Edit mission</h3>
+          <button type="button" class="icon-btn shrink-0" data-act="closeDialog" aria-label="Close">✕</button>
+        </div>
+        ${m.status === 'approved' ? '<p class="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-100">This mission is already complete. Changes will not alter Credits already paid, but repeats will use the new details.</p>' : ''}
+        ${m.status === 'claimed' || m.status === 'pending' ? `<p class="rounded-lg border border-cyan-500/40 bg-cyan-500/10 p-3 text-sm text-cyan-100">${esc((getOp(m.assignee) || {}).name || 'An Operative')} is working on this. They will see your changes straight away.</p>` : ''}
+        <label class="block"><span class="label">Title</span><input name="title" required maxlength="120" value="${esc(m.title)}" class="field mt-1 w-full"></label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="block"><span class="label">Credits</span><input name="credits" type="number" min="1" required value="${m.credits}" class="field mt-1 w-full"></label>
+          <label class="block"><span class="label">Category</span><input name="category" maxlength="40" list="editCategoryList" value="${esc(m.category)}" class="field mt-1 w-full"></label>
+        </div>
+        <datalist id="editCategoryList">${cats.map(c => `<option value="${esc(c)}">`).join('')}</datalist>
+        <label class="block"><span class="label">Briefing</span><textarea name="details" rows="5" maxlength="1000" class="field mt-1 w-full">${esc(m.details)}</textarea></label>
+        <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" name="repeatable" ${m.repeatable ? 'checked' : ''} class="h-4 w-4 accent-cyan-500"> Auto-repeat after each approval</label>
+        <div class="flex flex-wrap gap-2 pt-2">
+          <button class="btn btn-cyan">Save changes</button>
+          <button type="button" class="btn btn-ghost" data-act="details" data-id="${m.id}">Cancel</button>
+        </div>
+      </form>`;
+  }
+
   function missionDetail(m) {
     const op = m.assignee ? getOp(m.assignee) : null;
     const isCmd = state.view === 'cmd';
@@ -468,6 +493,7 @@
     let btns = '';
     if (isCmd) {
       if (m.status === 'pending') btns += `<button class="btn btn-cyan" data-act="approveMission" data-id="${m.id}">Approve</button><button class="btn btn-red" data-act="rejectMission" data-id="${m.id}">Return</button>`;
+      btns += `<button class="btn btn-cyan" data-act="editMission" data-id="${m.id}">Edit</button>`;
       btns += `<button class="btn btn-amber" data-act="repost" data-id="${m.id}">Repeat on board</button>`;
       btns += `<button class="btn btn-ghost" data-act="toggleRepeat" data-id="${m.id}">${m.repeatable ? 'Turn off auto-repeat' : 'Turn on auto-repeat'}</button>`;
     } else if (m.status === 'open') {
@@ -499,10 +525,10 @@
         ${btns ? `<div class="mt-5 flex flex-wrap gap-2">${btns}</div>` : ''}
       </div>`;
   }
-  function openMission(id) {
+  function openMission(id, editing = false) {
     const m = getMission(id); if (!m) return;
     const dlg = document.getElementById('missionDialog');
-    document.getElementById('missionDialogBody').innerHTML = missionDetail(m);
+    document.getElementById('missionDialogBody').innerHTML = editing ? missionEditForm(m) : missionDetail(m);
     if (!dlg.open) dlg.showModal();
   }
   const titleBtn = m => `<button class="text-left text-slate-100 underline decoration-cyan-500/40 decoration-dotted underline-offset-4 hover:text-cyan-200" data-act="details" data-id="${m.id}">${esc(m.title)}</button>`;
@@ -605,6 +631,7 @@
           <span class="credit">${m.credits} CR</span>
           <div class="flex flex-wrap gap-2">
             <button class="btn ${m.repeatable ? 'btn-cyan' : 'btn-ghost'}" data-act="toggleRepeat" data-id="${m.id}" aria-pressed="${m.repeatable}" title="Automatically put a fresh copy on the board each time this is approved">↻ ${m.repeatable ? 'Auto-repeat on' : 'Auto-repeat'}</button>
+            <button class="btn btn-ghost" data-act="editMission" data-id="${m.id}">Edit</button>
             ${m.status === 'approved' ? `<button class="btn btn-amber" data-act="repost" data-id="${m.id}">Repeat</button>` : ''}
             <button class="icon-btn" data-act="deleteMission" data-id="${m.id}" aria-label="Delete mission" title="Delete mission">✕</button>
           </div>
@@ -875,6 +902,7 @@
     view: el => { state.view = el.dataset.id; commit(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
     filter: el => { ui.missionFilter = el.dataset.id; render(); },
     details: el => openMission(el.dataset.id),
+    editMission: el => openMission(el.dataset.id, true),
     closeDialog: () => document.getElementById('missionDialog').close(),
 
     claim: el => {
@@ -984,6 +1012,16 @@
       state.missions.push({ id: uid(), title, details: (fd.get('details') || '').trim(), category: (fd.get('category') || '').trim(), repeatable: fd.get('repeatable') === 'on', credits: toInt(fd.get('credits'), 1, 10), status: 'open', assignee: null, createdAt: Date.now() });
       toast('Mission posted to the board.');
     },
+    editMission: (f, fd) => {
+      const m = getMission(f.dataset.id); if (!m) return;
+      const title = (fd.get('title') || '').trim(); if (!title) return;
+      m.title = title;
+      m.credits = toInt(fd.get('credits'), 1, m.credits);
+      m.category = (fd.get('category') || '').trim();
+      m.details = (fd.get('details') || '').trim();
+      m.repeatable = fd.get('repeatable') === 'on';
+      toast('Mission updated.');
+    },
     adjust: (f, fd, submitter) => {
       const op = getOp(fd.get('op')); const amt = toInt(fd.get('amount'), 1, 0); if (!op || !amt) return;
       const deduct = submitter && submitter.value === 'deduct';
@@ -1019,7 +1057,7 @@
     if (!el || !actions[el.dataset.act]) return;
     e.preventDefault();
     const dlg = document.getElementById('missionDialog');
-    if (dlg.open && dlg.contains(el) && el.dataset.act !== 'details') dlg.close();
+    if (dlg.open && dlg.contains(el) && !['details', 'editMission'].includes(el.dataset.act)) dlg.close();
     actions[el.dataset.act](el);
   });
 
@@ -1039,6 +1077,7 @@
     const handler = forms[f.dataset.form]; if (!handler) return;
     handler(f, new FormData(f), e.submitter);
     commit();
+    if (f.dataset.form === 'editMission') openMission(f.dataset.id);
   });
 
   function importText(text) {

@@ -23,7 +23,7 @@
         "target": 13000
       },
       "celebrated": false,
-      "lastUnlocked": null
+      "lastUnlocked": 1
     },
     {
       "id": "u2",
@@ -368,6 +368,105 @@
       "claimedAt": 1791497893181,
       "submittedAt": 1791497903552,
       "approvedAt": 1791497907853
+    },
+    {
+      "id": "eh7hntpljxb",
+      "title": "Clean microwave inside",
+      "details": "Get the cleaning spray and a scrub sponge to clean inside then spray again and wipe over with a paper towel.",
+      "category": "Cleaning",
+      "repeatable": false,
+      "credits": 50,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792599735073
+    },
+    {
+      "id": "o6g1puhno14",
+      "title": "Dust the office and entry hall area",
+      "details": "Use the duster wand to carefully dust around the surfaces and shelves. If any Lego comes off fix it.",
+      "category": "Cleaning",
+      "repeatable": false,
+      "credits": 100,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792599833704
+    },
+    {
+      "id": "968ni29q6fv",
+      "title": "Clean toilet in mummy and daddy bathroom",
+      "details": "Use chemical to clean toilet using scrubber. Use spray or wipes to clean the toilet. Make sure that the bin is clean. \n\nCheck the floor is clean.",
+      "category": "Cleaning",
+      "repeatable": false,
+      "credits": 100,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792599950875
+    },
+    {
+      "id": "0cjdwqyt49t",
+      "title": "Clean mummy and daddy bathroom",
+      "details": "Clear off surfaces. Use spray to clean under everything and in worktops. Clean sinks and taps.  Clean the bath and shower with spray. Use anti scale cleaner in shower and sinks. Mummy or daddy can provide.",
+      "category": "Cleaning",
+      "repeatable": false,
+      "credits": 400,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792600088033
+    },
+    {
+      "id": "1zk59ehw2p8",
+      "title": "Wash Tesla",
+      "details": "Use pressure washer. Water rinse first. Then soap and follow behind with scrubbing mitt or sponge. Then rinse off. Use a  shammy cloth to remove water drops from Windows.",
+      "category": "Cleaning",
+      "repeatable": false,
+      "credits": 500,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792600225964
+    },
+    {
+      "id": "6bricrvwx1g",
+      "title": "Wash chevvy",
+      "details": "Use pressure washer. Water rinse first. Then soap and follow behind with scrubbing mitt or sponge. Then rinse off. Use a shammy cloth to remove water drops from Windows.",
+      "category": "Cleaning",
+      "repeatable": false,
+      "credits": 500,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792600265284
+    },
+    {
+      "id": "zr273toyld8",
+      "title": "Tidy, vacuum and clean tesla",
+      "details": "Remove clutter from cabin everywhere. Use vacuum to clean then use wipes cloth and polish on surfaces. Clean Windows inside with Windows cleaner.",
+      "category": "Cleaning",
+      "repeatable": false,
+      "credits": 200,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792600343468
+    },
+    {
+      "id": "1jn3i2dzdf2",
+      "title": "Tidy vacuum and clean chevvy",
+      "details": "Remove clutter from cabin everywhere. Use vacuum to clean then use wipes cloth and polish on surfaces. Clean Windows inside with Windows cleaner.",
+      "category": "Cleaning",
+      "repeatable": false,
+      "credits": 250,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792600379822
+    },
+    {
+      "id": "zuabubu038z",
+      "title": "Dusting blinds",
+      "details": "Use the duster to clean the blinds in the whole house.",
+      "category": "Cleaning",
+      "credits": 200,
+      "repeatable": false,
+      "status": "open",
+      "assignee": null,
+      "createdAt": 1792600413299
     }
   ],
   "ledger": [
